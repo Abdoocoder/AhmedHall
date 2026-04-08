@@ -9,6 +9,8 @@ import {
   ClipboardList,
   Building2,
   Users,
+  LogOut,
+  Settings,
 } from "lucide-react"
 
 import {
@@ -21,7 +23,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarFooter,
 } from "@/components/ui/sidebar"
+import { logout } from "@/app/actions/auth"
 
 const menuItems = [
   {
@@ -96,6 +100,16 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="border-t border-sidebar-border p-2">
+        <SidebarMenuButton
+          onClick={() => logout()}
+          tooltip="تسجيل الخروج"
+          className="w-full cursor-pointer text-red-500 hover:text-red-600 hover:bg-red-50"
+        >
+          <LogOut className="size-4" />
+          <span>تسجيل الخروج</span>
+        </SidebarMenuButton>
+      </SidebarFooter>
     </Sidebar>
   )
 }
