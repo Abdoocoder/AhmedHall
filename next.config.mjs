@@ -6,6 +6,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  allowedImageDomains: ["localhost", "fhkrmjttxmwutdcwyuhm.supabase.co"],
 }
 
 export default nextConfig
