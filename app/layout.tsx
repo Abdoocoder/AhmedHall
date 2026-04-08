@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
-import { Noto_Sans_Arabic } from 'next/font/google'
+import { Cairo } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
-const notoSansArabic = Noto_Sans_Arabic({ 
+const notoSansArabic = Cairo({
   subsets: ["arabic"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-arabic"
