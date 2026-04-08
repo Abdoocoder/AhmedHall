@@ -89,11 +89,13 @@ export function BookingsTable({ bookings, rooms, organizations }: BookingsTableP
         ),
       },
       {
+        id: "organization_name",
         accessorKey: "organization.name",
         header: "الجهة",
         cell: ({ row }) => row.original.organization?.name ?? "-",
       },
       {
+        id: "room_name",
         accessorKey: "room.name",
         header: "القاعة",
         cell: ({ row }) => row.original.room?.name ?? "-",
@@ -199,9 +201,9 @@ export function BookingsTable({ bookings, rooms, organizations }: BookingsTableP
           />
         </div>
         <Select
-          value={(table.getColumn("room.name")?.getFilterValue() as string) ?? "all"}
+          value={(table.getColumn("room_name")?.getFilterValue() as string) ?? "all"}
           onValueChange={(value) =>
-            table.getColumn("room.name")?.setFilterValue(value === "all" ? "" : value)
+            table.getColumn("room_name")?.setFilterValue(value === "all" ? "" : value)
           }
         >
           <SelectTrigger className="w-[180px]">
