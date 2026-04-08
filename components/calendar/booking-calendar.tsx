@@ -1,11 +1,10 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import FullCalendar from "@fullcalendar/react"
 import dayGridPlugin from "@fullcalendar/daygrid"
 import timeGridPlugin from "@fullcalendar/timegrid"
 import interactionPlugin from "@fullcalendar/interaction"
-import arLocale from "@fullcalendar/core/locales/ar"
 import {
   Dialog,
   DialogContent,
@@ -22,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import type { BookingWithRelations, Room } from "@/lib/types"
+import { formatNabataeanDate, getNabataeanMonthGenitive, formatNabataeanMonthYear } from "@/lib/nabataean-calendar"
 
 interface BookingCalendarProps {
   bookings: BookingWithRelations[]
@@ -111,7 +111,6 @@ export function BookingCalendar({ bookings, rooms }: BookingCalendarProps) {
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
-          locale={arLocale}
           direction="rtl"
           headerToolbar={{
             right: "prev,next today",
@@ -133,6 +132,10 @@ export function BookingCalendar({ bookings, rooms }: BookingCalendarProps) {
           eventDisplay="block"
           dayMaxEvents={3}
           moreLinkText={(num) => `+ ${num} المزيد`}
+          titleFormat={(date) => {
+            const dateObj = new Date(date.date.year, date.date.month - 1, 1)
+            return formatNabataeanMonthYear(dateObj)
+          }}
         />
       </div>
 
@@ -156,12 +159,7 @@ export function BookingCalendar({ bookings, rooms }: BookingCalendarProps) {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">التاريخ:</span>
                   <span className="font-medium">
-                    {new Date(selectedBooking.booking_date).toLocaleDateString("ar-SA", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
+                    {formatNabataeanDate(selectedBooking.booking_date)}
                   </span>
                 </div>
                 <div className="flex justify-between">

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { StatsCards } from "@/components/dashboard/stats-cards"
 import { UpcomingBookings } from "@/components/dashboard/upcoming-bookings"
+import { formatNabataeanMonthYear } from "@/lib/nabataean-calendar"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -63,7 +64,7 @@ export default async function DashboardPage() {
       <div>
         <h2 className="text-2xl font-bold tracking-tight">لوحة التحكم</h2>
         <p className="text-muted-foreground">
-          نظرة عامة على حجوزات القاعات والإحصائيات
+          نظرة عامة على حجوزات القاعات والإحصائيات - {formatNabataeanMonthYear(today)}
         </p>
       </div>
 

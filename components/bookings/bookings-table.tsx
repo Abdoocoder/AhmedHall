@@ -40,6 +40,7 @@ import { MoreHorizontal, Search, ChevronLeft, ChevronRight } from "lucide-react"
 import { BookingDialog } from "./booking-dialog"
 import { DeleteBookingDialog } from "./delete-booking-dialog"
 import type { BookingWithRelations, Room, Organization } from "@/lib/types"
+import { formatNabataeanDate } from "@/lib/nabataean-calendar"
 
 interface BookingsTableProps {
   bookings: BookingWithRelations[]
@@ -57,11 +58,7 @@ const paymentStatusMap = {
 }
 
 function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString("ar-SA", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  })
+  return formatNabataeanDate(dateString)
 }
 
 function formatTime(timeString: string) {

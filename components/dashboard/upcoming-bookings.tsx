@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/empty"
 import { CalendarDays } from "lucide-react"
 import type { BookingWithRelations } from "@/lib/types"
+import { formatNabataeanDate } from "@/lib/nabataean-calendar"
 
 interface UpcomingBookingsProps {
   bookings: BookingWithRelations[]
@@ -21,12 +22,7 @@ const paymentStatusMap = {
 }
 
 function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString("ar-SA", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  })
+  return formatNabataeanDate(dateString)
 }
 
 function formatTime(timeString: string) {
