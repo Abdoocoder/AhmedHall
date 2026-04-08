@@ -1,11 +1,11 @@
 "use client"
 
 import { useState, useMemo } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import {
   useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   flexRender,
   type ColumnDef,
@@ -45,6 +45,9 @@ interface BookingsTableProps {
   bookings: BookingWithRelations[]
   rooms: Room[]
   organizations: Organization[]
+  totalCount: number
+  currentPage: number
+  pageSize: number
 }
 
 const paymentStatusMap = {
@@ -69,10 +72,27 @@ function formatTime(timeString: string) {
   return `${hour12}:${minutes} ${ampm}`
 }
 
-export function BookingsTable({ bookings, rooms, organizations }: BookingsTableProps) {
+export function BookingsTable({
+  bookings,
+  rooms,
+  organizations,
+  totalCount,
+  currentPage,
+  pageSize,
+}: BookingsTableProps) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState("")
+
+  const totalPages = Math.ceil(totalCount / pageSize)
+
+  const handlePageChange = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("page", newPage.toString())
+    router.push(`?${params.toString()}`)
+  }
 
   const columns = useMemo<ColumnDef<BookingWithRelations>[]>(
     () => [
@@ -184,8 +204,8 @@ export function BookingsTable({ bookings, rooms, organizations }: BookingsTableP
     onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    manualPagination: true,
   })
 
   return (
@@ -284,23 +304,27 @@ export function BookingsTable({ bookings, rooms, organizations }: BookingsTableP
 
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          عرض {table.getRowModel().rows.length} من {bookings.length} حجز
+          عرض {Math.min((currentPage - 1) * pageSize + 1, totalCount)} -{" "}
+          {Math.min(currentPage * pageSize, totalCount)} من {totalCount} حجز
         </p>
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage <= 1}
           >
             <ChevronRight className="size-4" />
             السابق
           </Button>
+          <div className="text-sm font-medium">
+            صفحة {currentPage} من {totalPages || 1}
+          </div>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage >= totalPages}
           >
             التالي
             <ChevronLeft className="size-4" />
