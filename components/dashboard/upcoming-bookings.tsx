@@ -1,6 +1,12 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Empty } from "@/components/ui/empty"
+import {
+  Empty,
+  EmptyHeader,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyMedia,
+} from "@/components/ui/empty"
 import { CalendarDays } from "lucide-react"
 import type { BookingWithRelations } from "@/lib/types"
 
@@ -40,11 +46,15 @@ export function UpcomingBookings({ bookings }: UpcomingBookingsProps) {
       </CardHeader>
       <CardContent>
         {bookings.length === 0 ? (
-          <Empty
-            icon={CalendarDays}
-            title="لا توجد حجوزات قادمة"
-            description="لم يتم العثور على أي حجوزات قادمة"
-          />
+          <Empty className="min-h-[200px]">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <CalendarDays />
+              </EmptyMedia>
+              <EmptyTitle>لا توجد حجوزات قادمة</EmptyTitle>
+              <EmptyDescription>لم يتم العثور على أي حجوزات قادمة</EmptyDescription>
+            </EmptyHeader>
+          </Empty>
         ) : (
           <div className="space-y-4">
             {bookings.map((booking) => (

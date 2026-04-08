@@ -15,7 +15,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Empty } from "@/components/ui/empty"
+import {
+  Empty,
+  EmptyHeader,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyMedia,
+} from "@/components/ui/empty"
 import { MoreHorizontal, Users } from "lucide-react"
 import { OrganizationDialog } from "./organization-dialog"
 import { DeleteOrganizationDialog } from "./delete-organization-dialog"
@@ -28,11 +34,15 @@ interface OrganizationsTableProps {
 export function OrganizationsTable({ organizations }: OrganizationsTableProps) {
   if (organizations.length === 0) {
     return (
-      <Empty
-        icon={Users}
-        title="لا توجد جهات"
-        description="لم يتم إضافة أي جهات بعد. أضف جهة جديدة للبدء."
-      />
+      <Empty className="min-h-[400px]">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <Users />
+          </EmptyMedia>
+          <EmptyTitle>لا توجد جهات</EmptyTitle>
+          <EmptyDescription>لم يتم إضافة أي جهات بعد. أضف جهة جديدة للبدء.</EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     )
   }
 

@@ -9,7 +9,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Empty } from "@/components/ui/empty"
+import {
+  Empty,
+  EmptyHeader,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyMedia,
+} from "@/components/ui/empty"
 import { MoreVertical, Users, Building2 } from "lucide-react"
 import { RoomDialog } from "./room-dialog"
 import { DeleteRoomDialog } from "./delete-room-dialog"
@@ -22,11 +28,15 @@ interface RoomsGridProps {
 export function RoomsGrid({ rooms }: RoomsGridProps) {
   if (rooms.length === 0) {
     return (
-      <Empty
-        icon={Building2}
-        title="لا توجد قاعات"
-        description="لم يتم إضافة أي قاعات بعد. أضف قاعة جديدة للبدء."
-      />
+      <Empty className="min-h-[400px]">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <Building2 />
+          </EmptyMedia>
+          <EmptyTitle>لا توجد قاعات</EmptyTitle>
+          <EmptyDescription>لم يتم إضافة أي قاعات بعد. أضف قاعة جديدة للبدء.</EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     )
   }
 
