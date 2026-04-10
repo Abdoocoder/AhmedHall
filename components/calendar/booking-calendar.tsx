@@ -133,7 +133,7 @@ export function BookingCalendar({ bookings, rooms }: BookingCalendarProps) {
           dayMaxEvents={3}
           moreLinkText={(num) => `+ ${num} المزيد`}
           titleFormat={(date) => {
-            const dateObj = new Date(date.date.year, date.date.month - 1, 1)
+            const dateObj = new Date(date.date.year, date.date.month, 1)
             return formatNabataeanMonthYear(dateObj)
           }}
         />
