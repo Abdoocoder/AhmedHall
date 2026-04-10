@@ -1,13 +1,16 @@
-# Municipality Hall Booking System
+# Municipality Hall Booking System — MadabaHalls
 
 <div align="center">
 
+![Version](https://img.shields.io/badge/version-1.0.0-brightgreen?style=for-the-badge)
 ![Next.js](https://img.shields.io/badge/Next.js-16.2.0-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7.3-blue?style=for-the-badge&logo=typescript)
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green?style=for-the-badge&logo=supabase)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2.0-38bdf8?style=for-the-badge&logo=tailwind-css)
 
 Event Hall Booking Management System for Municipalities
+
+**[Live Demo](https://madabahalls.vercel.app)**
 
 </div>
 
@@ -21,15 +24,17 @@ A comprehensive system for managing event hall bookings in municipality faciliti
 - ✅ Integrated booking system with conflict detection
 - ✅ Interactive calendar for viewing all bookings
 - ✅ Hall and organization management
-- ✅ Nabataean calendar support (Kanun Thanii, Shubat, Athar...)
+- ✅ Nabataean calendar support (Jordanian month names)
 - ✅ Full Arabic interface with RTL support
-- ✅ Complete authentication and security system
+- ✅ Role-based authentication system (admin/manager/user)
 - ✅ Mobile-responsive design
+- ✅ Soft delete for bookings with recovery support
+- ✅ Payment tracking (amount and payment date)
 
 ## Prerequisites
 
 | Requirement | Version |
-|-------------|---------|
+| ----------- | ------- |
 | Node.js | 18.x or higher |
 | npm | 9.x or higher |
 | Supabase | Active account |
@@ -38,8 +43,8 @@ A comprehensive system for managing event hall bookings in municipality faciliti
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-repo/ahmedhall.git
-cd ahmedhall
+git clone https://github.com/Abdoocoder/AhmedHall.git
+cd AhmedHall
 
 # Install dependencies
 npm install
@@ -63,21 +68,19 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 
 ### Database
 
-1. Create a new project in Supabase
-2. Execute the table creation script:
-```bash
-psql -h your-host -U postgres -d your-db -f scripts/001_create_tables.sql
-```
+Run migration scripts in order via Supabase SQL Editor:
 
-3. (Optional) Execute the seed data script:
-```bash
-psql -h your-host -U postgres -d your-db -f scripts/002_seed_data.sql
+```
+scripts/001_create_tables.sql     — Create tables
+scripts/002_seed_data.sql         — Seed data (optional)
+scripts/003_add_roles_and_rls.sql — User roles and RLS policies
+scripts/004_add_missing_fields.sql — Soft delete and payment fields
 ```
 
 ## Project Structure
 
 ```
-ahmedhall/
+AhmedHall/
 ├── app/                    # Next.js App Router pages
 │   ├── actions/            # Server Actions
 │   ├── auth/               # Authentication pages
@@ -88,12 +91,12 @@ ahmedhall/
 │   ├── dashboard/          # Dashboard components
 │   ├── rooms/              # Room components
 │   ├── organizations/      # Organization components
-│   └── ui/                 # UI components
+│   └── ui/                 # UI components (Shadcn)
 ├── lib/                    # Libraries and utilities
 │   ├── supabase/           # Supabase configuration
 │   ├── nabataean-calendar.ts # Nabataean calendar
 │   └── types.ts            # Type definitions
-├── scripts/                 # Database scripts
+├── scripts/                # Database migration scripts
 └── public/                 # Static assets
 ```
 
@@ -107,9 +110,9 @@ ahmedhall/
 
 ### Managing Bookings
 
-- **Add new booking**: Click "New Booking" button on bookings page
-- **Edit booking**: Click on any existing booking
-- **Delete booking**: Use delete button with confirmation
+- **Add new booking**: Click "New Booking" button on the bookings page
+- **Edit booking**: Click the edit icon next to a booking
+- **Delete booking**: Use the delete button with confirmation (soft delete)
 
 ### Managing Halls and Organizations
 
@@ -118,47 +121,27 @@ ahmedhall/
 
 ## Troubleshooting
 
-### Database Connection Error
+### EPERM Build Error (Windows/OneDrive)
 
-Ensure:
-1. Environment variables are correct
-2. RLS is enabled in Supabase (or disabled for testing)
-3. Database URL is correct
+```cmd
+taskkill /f /im node.exe
+rd /s /q .next
+npm run build
+npm run start
+```
 
-### Authentication Issues
+### Database Issues
 
-1. Make sure email authentication is enabled in Supabase
-2. Verify SMTP is configured (for emails)
-
-### Rendering Issues
-
-- Clear cache: `npm run build`
-- Verify Next.js is running: `npm run dev`
-
-## Contributing
-
-We welcome contributions! Please:
-
-1. Create an Issue to describe the problem
-2. Fork the project
-3. Create a new branch: `git checkout -b feature/your-feature`
-4. Follow code standards
-5. Submit a Pull Request
+Ensure environment variables are correct and all migration scripts have been applied in order.
 
 ## License
 
-MIT License - See LICENSE file for details.
-
-## Contact
-
-For inquiries and support:
-- Email: support@municipality.gov.jo
-- Phone: +962-6-xxxxxxx
+MIT License
 
 ---
 
 <div align="center">
 
-Made with ❤️ for the Municipality
+Made with ❤️ for Madaba Municipality — Version 1.0.0
 
 </div>
