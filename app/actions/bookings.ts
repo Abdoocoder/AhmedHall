@@ -84,7 +84,10 @@ export async function updateBooking(id: string, data: BookingData) {
 export async function deleteBooking(id: string) {
   const supabase = await createClient()
 
-  const { error } = await supabase.from("bookings").delete().eq("id", id)
+  const { error } = await supabase
+    .from("bookings")
+    .update({ deleted_at: new Date().toISOString() })
+    .eq("id", id)
 
   if (error) {
     return { error: "حدث خطأ أثناء حذف الحجز" }
