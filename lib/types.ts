@@ -45,6 +45,32 @@ export interface BookingWithRelations extends Booking {
   room: Room
 }
 
+export type RequestStatus = 'pending' | 'approved' | 'rejected'
+
+export interface BookingRequest {
+  id: string
+  event_name: string
+  booking_date: string
+  start_time: string
+  end_time: string
+  attendees_count: number
+  notes: string | null
+  room_id: string
+  citizen_name: string
+  citizen_phone: string
+  citizen_email: string | null
+  organization_name: string
+  status: RequestStatus
+  rejection_reason: string | null
+  reviewed_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface BookingRequestWithRoom extends BookingRequest {
+  room: Room
+}
+
 export interface DashboardStats {
   totalBookingsThisMonth: number
   bookedDaysThisMonth: number

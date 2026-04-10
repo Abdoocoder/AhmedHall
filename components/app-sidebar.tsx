@@ -11,6 +11,7 @@ import {
   Users,
   LogOut,
   Settings,
+  Inbox,
 } from "lucide-react"
 
 import {
@@ -52,6 +53,11 @@ const menuItems = [
     title: "الجهات",
     url: "/organizations",
     icon: Users,
+  },
+  {
+    title: "طلبات الحجز",
+    url: "/requests",
+    icon: Inbox,
   },
 ]
 
