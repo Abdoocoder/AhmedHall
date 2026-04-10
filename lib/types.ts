@@ -32,7 +32,10 @@ export interface Booking {
   coordinator_phone: string | null
   attendees_count: number
   payment_status: PaymentStatus
+  payment_amount: number | null
+  payment_date: string | null
   notes: string | null
+  deleted_at: string | null
   created_at: string
   updated_at: string
 }
