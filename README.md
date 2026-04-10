@@ -1,6 +1,6 @@
 # MadabaHalls — نظام حجوزات قاعة البلدية
 
-> Municipality Hall Booking System — v1.0.0
+> Municipality Hall Booking System — v1.1.0
 
 هذا المشروع يحتوي على ملفين للوثائق:
 
@@ -20,4 +20,4 @@ npm install
 npm run dev
 ```
 
-افتح http://localhost:3000
+افتح [http://localhost:3000](http://localhost:3000)

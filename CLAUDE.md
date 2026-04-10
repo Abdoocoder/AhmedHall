@@ -106,7 +106,7 @@ This document contains guidelines and project context for AI assistants (like Cl
 
 ## Known Project Quirks & Issues
 
-- **Next.js 16.2.0:** This version is experimental/beta. Consider downgrading to Next.js 15.x for production stability.
+- **Next.js 15.5.15:** Stable production release — upgraded from 16.2.0.
 - **React 19:** Also experimental - may cause compatibility issues with some packages.
 - **Linting Edge Cases:** The `npm run eslint` command fails with "Invalid project directory" because `next lint` misinterprets the path on Windows — run `npx next lint` directly as a workaround.
 - **Git Configuration:** Use `abdoocoder@gmail.com` as the git author email for proper Vercel/GitHub identification.
@@ -178,17 +178,10 @@ Overall Score: 7.5/10
 
 ### Improvement Priorities
 
-**Medium:**
+**Remaining:**
 
-1. Add error boundaries
-2. Add loading skeletons
-3. Add rate limiting
-4. Improve `middleware.ts`
-
-**Low:**
-
-1. Downgrade Next.js 16 → 15 (current version is experimental)
-2. Add unit tests (Vitest or Jest)
+1. Add rate limiting
+2. Improve `middleware.ts`
 
 ## Page Routes
 

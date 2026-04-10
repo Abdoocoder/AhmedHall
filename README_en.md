@@ -1,9 +1,7 @@
 # Municipality Hall Booking System — MadabaHalls
 
-<div align="center">
-
-![Version](https://img.shields.io/badge/version-1.0.0-brightgreen?style=for-the-badge)
-![Next.js](https://img.shields.io/badge/Next.js-16.2.0-black?style=for-the-badge&logo=next.js)
+![Version](https://img.shields.io/badge/version-1.1.0-brightgreen?style=for-the-badge)
+![Next.js](https://img.shields.io/badge/Next.js-15.5.15-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7.3-blue?style=for-the-badge&logo=typescript)
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green?style=for-the-badge&logo=supabase)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2.0-38bdf8?style=for-the-badge&logo=tailwind-css)
@@ -11,8 +9,6 @@
 Event Hall Booking Management System for Municipalities
 
 **[Live Demo](https://madabahalls.vercel.app)**
-
-</div>
 
 ## Description
 
@@ -30,6 +26,8 @@ A comprehensive system for managing event hall bookings in municipality faciliti
 - ✅ Mobile-responsive design
 - ✅ Soft delete for bookings with recovery support
 - ✅ Payment tracking (amount and payment date)
+- ✅ Error boundaries and loading skeletons on all pages
+- ✅ Unit tests with Vitest
 
 ## Prerequisites
 
@@ -70,16 +68,16 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 
 Run migration scripts in order via Supabase SQL Editor:
 
-```
-scripts/001_create_tables.sql     — Create tables
-scripts/002_seed_data.sql         — Seed data (optional)
-scripts/003_add_roles_and_rls.sql — User roles and RLS policies
+```text
+scripts/001_create_tables.sql      — Create tables
+scripts/002_seed_data.sql          — Seed data (optional)
+scripts/003_add_roles_and_rls.sql  — User roles and RLS policies
 scripts/004_add_missing_fields.sql — Soft delete and payment fields
 ```
 
 ## Project Structure
 
-```
+```text
 AhmedHall/
 ├── app/                    # Next.js App Router pages
 │   ├── actions/            # Server Actions
@@ -119,6 +117,14 @@ AhmedHall/
 - Navigate to "Halls" or "Organizations" pages
 - Add, edit, or delete records as needed
 
+## Testing
+
+```bash
+npm test              # Run all tests once
+npm run test:watch    # Watch mode
+npm run test:coverage # Coverage report
+```
+
 ## Troubleshooting
 
 ### EPERM Build Error (Windows/OneDrive)
@@ -140,8 +146,4 @@ MIT License
 
 ---
 
-<div align="center">
-
-Made with ❤️ for Madaba Municipality — Version 1.0.0
-
-</div>
+Made with ❤️ for Madaba Municipality — Version 1.1.0

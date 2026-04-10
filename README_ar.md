@@ -1,9 +1,7 @@
 # نظام حجوزات قاعة البلدية — مدابا هولز
 
-<div align="center">
-
-![Version](https://img.shields.io/badge/الإصدار-1.0.0-brightgreen?style=for-the-badge)
-![Next.js](https://img.shields.io/badge/Next.js-16.2.0-black?style=for-the-badge&logo=next.js)
+![Version](https://img.shields.io/badge/الإصدار-1.1.0-brightgreen?style=for-the-badge)
+![Next.js](https://img.shields.io/badge/Next.js-15.5.15-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7.3-blue?style=for-the-badge&logo=typescript)
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green?style=for-the-badge&logo=supabase)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2.0-38bdf8?style=for-the-badge&logo=tailwind-css)
@@ -11,8 +9,6 @@
 نظام إدارة حجوزات قاعات الفعاليات للبلديات
 
 **[العرض المباشر](https://madabahalls.vercel.app)**
-
-</div>
 
 ## الوصف
 
@@ -30,6 +26,8 @@
 - ✅ دعم الأجهزة المحمولة
 - ✅ حذف ناعم للحجوزات مع إمكانية الاسترجاع
 - ✅ تتبع المدفوعات (المبلغ وتاريخ الدفع)
+- ✅ حماية من أخطاء الـ rendering مع loading skeletons
+- ✅ اختبارات وحدة مع Vitest
 
 ## المتطلبات
 
@@ -70,16 +68,16 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 
 نفّذ السكريبتات بالترتيب في Supabase SQL Editor:
 
-```
-scripts/001_create_tables.sql    — إنشاء الجداول
-scripts/002_seed_data.sql        — بيانات تجريبية (اختياري)
+```text
+scripts/001_create_tables.sql     — إنشاء الجداول
+scripts/002_seed_data.sql         — بيانات تجريبية (اختياري)
 scripts/003_add_roles_and_rls.sql — أدوار المستخدمين وسياسات الأمان
 scripts/004_add_missing_fields.sql — حقول الحذف الناعم والمدفوعات
 ```
 
 ## هيكل المشروع
 
-```
+```text
 AhmedHall/
 ├── app/                    # صفحات Next.js App Router
 │   ├── actions/            # Server Actions
@@ -119,6 +117,14 @@ AhmedHall/
 - انتقل إلى صفحة "القاعات" أو "الجهات"
 - أضف أو عدّل أو احذف السجلات حسب الحاجة
 
+## الاختبارات
+
+```bash
+npm test               # تشغيل جميع الاختبارات
+npm run test:watch     # مراقبة التغييرات
+npm run test:coverage  # تقرير التغطية
+```
+
 ## استكشاف الأخطاء
 
 ### خطأ EPERM عند البناء (Windows/OneDrive)
@@ -140,8 +146,4 @@ MIT License
 
 ---
 
-<div align="center">
-
-صُنع بـ ❤️ لبلدية مدابا — الإصدار 1.0.0
-
-</div>
+صُنع بـ ❤️ لبلدية مدابا — الإصدار 1.1.0
