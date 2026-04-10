@@ -47,8 +47,14 @@ DROP POLICY IF EXISTS "Allow authenticated insert bookings" ON bookings;
 DROP POLICY IF EXISTS "Allow authenticated update bookings" ON bookings;
 DROP POLICY IF EXISTS "Allow authenticated delete bookings" ON bookings;
 
-CREATE POLICY "Users can read all bookings" ON bookings
-  FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Authenticated users can read bookings" ON bookings
+  FOR SELECT TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1 FROM user_roles
+      WHERE user_id = auth.uid() AND role IN ('admin', 'manager', 'user')
+    )
+  );
 
 CREATE POLICY "Admins and managers can insert bookings" ON bookings
   FOR INSERT TO authenticated WITH CHECK (
@@ -80,8 +86,14 @@ DROP POLICY IF EXISTS "Allow authenticated insert organizations" ON organization
 DROP POLICY IF EXISTS "Allow authenticated update organizations" ON organizations;
 DROP POLICY IF EXISTS "Allow authenticated delete organizations" ON organizations;
 
-CREATE POLICY "Users can read organizations" ON organizations
-  FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Authenticated users can read organizations" ON organizations
+  FOR SELECT TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1 FROM user_roles
+      WHERE user_id = auth.uid() AND role IN ('admin', 'manager', 'user')
+    )
+  );
 
 CREATE POLICY "Admins and managers can insert organizations" ON organizations
   FOR INSERT TO authenticated WITH CHECK (
@@ -113,8 +125,14 @@ DROP POLICY IF EXISTS "Allow authenticated insert rooms" ON rooms;
 DROP POLICY IF EXISTS "Allow authenticated update rooms" ON rooms;
 DROP POLICY IF EXISTS "Allow authenticated delete rooms" ON rooms;
 
-CREATE POLICY "Users can read rooms" ON rooms
-  FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Authenticated users can read rooms" ON rooms
+  FOR SELECT TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1 FROM user_roles
+      WHERE user_id = auth.uid() AND role IN ('admin', 'manager', 'user')
+    )
+  );
 
 CREATE POLICY "Only admins can insert rooms" ON rooms
   FOR INSERT TO authenticated WITH CHECK (

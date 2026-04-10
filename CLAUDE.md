@@ -54,7 +54,7 @@ This document contains guidelines and project context for AI assistants (like Cl
 
 - **organizations**: id, name, contact_person, phone, email, created_at, updated_at
 - **rooms**: id, name, capacity, description, is_active, created_at, updated_at
-- **bookings**: id, org_id, room_id, booking_date, start_time, end_time, event_name, coordinator_name, coordinator_phone, attendees_count, payment_status (enum), notes, created_at, updated_at *(12 fields)*
+- **bookings**: id, org_id, room_id, booking_date, start_time, end_time, event_name, coordinator_name, coordinator_phone, attendees_count, payment_status (enum), payment_amount, payment_date, notes, deleted_at, created_at, updated_at *(15 fields)*
 - **user_roles**: id, user_id, role (admin/manager/user)
 
 ### Security Features
@@ -68,8 +68,15 @@ This document contains guidelines and project context for AI assistants (like Cl
 ### Known Database Gaps
 
 - No `created_by` field for audit tracking
-- No `deleted_at` for soft delete
-- No `payment_amount` or `payment_date` fields
+
+### Applied Migrations
+
+| File | Status | Description |
+| ---- | ------ | ----------- |
+| `scripts/001_create_tables.sql` | Applied | Base tables: organizations, rooms, bookings |
+| `scripts/002_seed_data.sql` | Applied | Seed data |
+| `scripts/003_add_roles_and_rls.sql` | Applied | user_roles table + role-based RLS policies |
+| `scripts/004_add_missing_fields.sql` | Applied | Added deleted_at (soft delete), payment_amount, payment_date to bookings |
 
 ## Developer Guidelines
 
