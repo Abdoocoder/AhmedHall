@@ -90,7 +90,7 @@ export async function deleteBooking(id: string) {
     .eq("id", id)
 
   if (error) {
-    return { error: "حدث خطأ أثناء حذف الحجز" }
+    return { error: error.message }
   }
 
   revalidatePath("/bookings")
