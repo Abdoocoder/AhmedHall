@@ -51,11 +51,13 @@ This document contains guidelines and project context for AI assistants (like Cl
 ## Database Schema
 
 ### Tables
+
 - **organizations**: id, name, contact_person, phone, email, created_at, updated_at
 - **rooms**: id, name, capacity, description, is_active, created_at, updated_at
 - **bookings**: id, organization_id, room_id, booking_date, start_time, end_time, event_name, coordinator_name, coordinator_phone, attendees_count, payment_status (enum), notes, created_at, updated_at
 
 ### Security Features
+
 - Row Level Security (RLS) enabled on all tables
 - Booking conflict prevention trigger
 - Indexes for query performance
@@ -84,13 +86,46 @@ This document contains guidelines and project context for AI assistants (like Cl
 - **Next.js 16.2.0:** This version is experimental/beta. Consider downgrading to Next.js 15.x for production stability.
 - **React 19:** Also experimental - may cause compatibility issues with some packages.
 - **Package Name:** Currently set to "my-project" - should be changed to "ahmedhall".
-- **Linting Edge Cases:** Calling Next's lint script through complex pipeline scripts may cause path interpretation errors.
+- **Linting Edge Cases:** Calling Next's lint script through complex pipeline scripts may cause path interpretation errors. The `npm run eslint` command fails with "Invalid project directory" because `next lint` misinterprets the path on Windows — run `npx next lint` directly as a workaround.
 - **Missing Testing Suite:** `npm run test:coverage` will fail - requires Vitest or Jest integration.
 - **Duplicate Hooks:** `hooks/use-mobile.ts` and `hooks/use-toast.ts` duplicate `components/ui/use-*` files.
+
+## Windows / OneDrive Environment Issues
+
+The project is located inside a OneDrive-synced folder. This causes the following known issues:
+
+### Build Failures (EPERM)
+
+OneDrive locks files in `.next/static/` during sync, causing `next build` to fail with:
+
+```text
+Error: EPERM: operation not permitted, unlink '.next/static/...'
+```
+
+**Fix:** Delete `.next` using Windows-native tools (not `rm -rf` from bash, which fails on locked files):
+
+```cmd
+# Command Prompt (run as Administrator if needed)
+taskkill /f /im node.exe
+rd /s /q .next
+npm run build
+npm run start
+```
+
+```powershell
+# PowerShell
+Stop-Process -Name node -Force -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force .next
+npm run build
+npm run start
+```
+
+**Long-term fix:** Exclude `.next` from OneDrive sync by right-clicking the folder in Explorer → OneDrive → "Don't sync this folder", or move the project outside the OneDrive-synced directory entirely.
 
 ## Code Review Findings
 
 ### Strengths
+
 - Modern App Router architecture with route groups
 - Comprehensive TypeScript types
 - Nabataean calendar integration
@@ -99,6 +134,7 @@ This document contains guidelines and project context for AI assistants (like Cl
 - RLS policies for security
 
 ### Areas for Improvement
+
 1. **Dependencies:** Next.js 16.2.0 and React 19 are experimental
 2. **Security:** RLS policies use `USING (true)` - overly permissive
 3. **Database:** No `created_by` field for audit tracking, no soft delete
@@ -108,7 +144,7 @@ This document contains guidelines and project context for AI assistants (like Cl
 ## Page Routes
 
 | Route | Description |
-| ----- |-------------|
+| ----- | ----------- |
 | `/` | Landing page |
 | `/auth/login` | Login page |
 | `/dashboard` | Dashboard with stats |
