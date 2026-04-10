@@ -103,6 +103,7 @@ This document contains guidelines and project context for AI assistants (like Cl
 - **React 19:** Also experimental - may cause compatibility issues with some packages.
 - **Package Name:** Currently set to "my-project" - should be changed to "ahmedhall".
 - **Linting Edge Cases:** Calling Next's lint script through complex pipeline scripts may cause path interpretation errors. The `npm run eslint` command fails with "Invalid project directory" because `next lint` misinterprets the path on Windows — run `npx next lint` directly as a workaround.
+- **Git Configuration:** Use `abdooraf3@gmail.com` as the git author email for proper Vercel/GitHub identification.
 - **Missing Testing Suite:** `npm run test:coverage` will fail - requires Vitest or Jest integration.
 - **Duplicate Hooks:** `hooks/use-mobile.ts` and `hooks/use-toast.ts` duplicate `components/ui/use-*` files.
 
