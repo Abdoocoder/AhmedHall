@@ -59,10 +59,10 @@ export function AppSidebar() {
   const pathname = usePathname()
 
   return (
-    <Sidebar side="right" collapsible="icon" className="border-l border-sidebar-border">
-      <SidebarHeader className="border-b border-sidebar-border p-4">
+    <Sidebar side="right" collapsible="icon" className="border-l-0">
+      <SidebarHeader className="border-b-0 p-6 pb-4">
         <div className="flex items-center gap-3">
-          <div className="relative size-10 overflow-hidden rounded-md bg-primary/10 p-1">
+          <div className="relative size-12 overflow-hidden rounded-xl shadow-md">
             <Image
               src="/logo.png"
               alt="شعار البلدية"
@@ -72,14 +72,14 @@ export function AppSidebar() {
             />
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="text-sm font-bold tracking-wide uppercase">AhmedHall</span>
-            <span className="text-xs text-sidebar-foreground/60 font-mono">GPU COMPUTING</span>
+            <span className="text-lg font-semibold">البلدية</span>
+            <span className="text-sm text-muted-foreground">نظام الحجوزات</span>
           </div>
         </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="font-mono text-xs uppercase tracking-wider px-2">System Menu</SidebarGroupLabel>
+          <SidebarGroupLabel className="px-4 py-2 text-xs font-medium uppercase">القائمة الرئيسية</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
@@ -88,10 +88,10 @@ export function AppSidebar() {
                     asChild
                     isActive={pathname === item.url}
                     tooltip={item.title}
-                    className="font-medium"
+                    className="rounded-full mx-2"
                   >
-                    <Link href={item.url} className="group-data-[collapsed=true]:justify-center">
-                      <item.icon className="size-4" />
+                    <Link href={item.url}>
+                      <item.icon className="size-5" />
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
@@ -101,14 +101,14 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t border-sidebar-border p-2">
+      <SidebarFooter className="border-t-0 p-4">
         <SidebarMenuButton
           onClick={() => logout()}
           tooltip="تسجيل الخروج"
-          className="w-full cursor-pointer text-destructive hover:text-destructive hover:bg-destructive/10"
+          className="w-full cursor-pointer rounded-full hover:bg-destructive/10 text-destructive hover:text-destructive"
         >
-          <LogOut className="size-4" />
-          <span className="font-mono text-xs uppercase">LOGOUT</span>
+          <LogOut className="size-5" />
+          <span>تسجيل الخروج</span>
         </SidebarMenuButton>
       </SidebarFooter>
     </Sidebar>
