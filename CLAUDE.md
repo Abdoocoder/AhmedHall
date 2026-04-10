@@ -2,6 +2,11 @@
 
 This document contains guidelines and project context for AI assistants (like Claude, Gemini, Roo Cline) working on the **AhmedHall** (Municipality Hall Booking System) repository.
 
+- **Version:** 1.0.0
+- **Package name:** madabahalls
+- **Live URL:** [madabahalls.vercel.app](https://madabahalls.vercel.app)
+- **GitHub:** [Abdoocoder/AhmedHall](https://github.com/Abdoocoder/AhmedHall)
+
 ## Project Overview
 
 **AhmedHall** is a web-based booking system for municipality halls. It tracks bookings, organizations, rooms, and integrates with a custom Nabataean Calendar specific to Jordan mapping (e.g., كانون ثاني, شباط, اذار).
@@ -101,11 +106,9 @@ This document contains guidelines and project context for AI assistants (like Cl
 
 - **Next.js 16.2.0:** This version is experimental/beta. Consider downgrading to Next.js 15.x for production stability.
 - **React 19:** Also experimental - may cause compatibility issues with some packages.
-- **Package Name:** Currently set to "my-project" - should be changed to "ahmedhall".
-- **Linting Edge Cases:** Calling Next's lint script through complex pipeline scripts may cause path interpretation errors. The `npm run eslint` command fails with "Invalid project directory" because `next lint` misinterprets the path on Windows — run `npx next lint` directly as a workaround.
-- **Git Configuration:** Use `abdooraf3@gmail.com` as the git author email for proper Vercel/GitHub identification.
+- **Linting Edge Cases:** The `npm run eslint` command fails with "Invalid project directory" because `next lint` misinterprets the path on Windows — run `npx next lint` directly as a workaround.
+- **Git Configuration:** Use `abdoocoder@gmail.com` as the git author email for proper Vercel/GitHub identification.
 - **Missing Testing Suite:** `npm run test:coverage` will fail - requires Vitest or Jest integration.
-- **Duplicate Hooks:** `hooks/use-mobile.ts` and `hooks/use-toast.ts` duplicate `components/ui/use-*` files.
 
 ## Windows / OneDrive Environment Issues
 
@@ -163,21 +166,15 @@ Overall Score: 7.5/10
 - Zod + React Hook Form for validated forms
 - Role-based RLS policies (admin/manager/user)
 
-### Security Concerns
+### Security Notes
 
-- `USING (true)` in RLS policies (`scripts/003_add_roles_and_rls.sql:51`) — overly permissive, allows all authenticated users to read all bookings
-- `SECURITY DEFINER` used in some functions — review carefully
-- No rate limiting
-- No explicit CSRF protection
+- RLS is enabled on all tables. SELECT policies use `USING (true)` intentionally — filtering of soft-deleted rows is handled in application code via `.is("deleted_at", null)`.
+- Write policies (INSERT/UPDATE/DELETE) are role-restricted via `user_roles` table.
+- `SECURITY DEFINER` used in `get_user_role()` and `soft_delete_booking()` functions — review before exposing publicly.
+- No rate limiting implemented yet.
+- No explicit CSRF protection.
 
 ### Improvement Priorities
-
-**High:**
-
-1. Fix RLS — replace `USING (true)` with role-scoped policies
-2. Remove duplicate hooks — delete `/hooks/use-toast.ts` and `/hooks/use-mobile.ts` (duplicates of `components/ui/use-*`)
-3. Add `deleted_at` for soft delete
-4. Add `payment_amount` and `payment_date` to bookings table
 
 **Medium:**
 
@@ -190,7 +187,6 @@ Overall Score: 7.5/10
 
 1. Downgrade Next.js 16 → 15 (current version is experimental)
 2. Add unit tests (Vitest or Jest)
-3. Rename package from "my-project" to "ahmedhall" in `package.json`
 
 ## Page Routes
 
