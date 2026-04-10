@@ -1,6 +1,6 @@
 # MadabaHalls — نظام حجوزات قاعة البلدية
 
-> Municipality Hall Booking System — v1.1.0
+> Municipality Hall Booking System — v1.1.1
 
 هذا المشروع يحتوي على ملفين للوثائق:
 

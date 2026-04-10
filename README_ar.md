@@ -1,6 +1,6 @@
 # نظام حجوزات قاعة البلدية — مدابا هولز
 
-![Version](https://img.shields.io/badge/الإصدار-1.1.0-brightgreen?style=for-the-badge)
+![Version](https://img.shields.io/badge/الإصدار-1.1.1-brightgreen?style=for-the-badge)
 ![Next.js](https://img.shields.io/badge/Next.js-15.5.15-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7.3-blue?style=for-the-badge&logo=typescript)
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green?style=for-the-badge&logo=supabase)
@@ -28,6 +28,8 @@
 - ✅ تتبع المدفوعات (المبلغ وتاريخ الدفع)
 - ✅ حماية من أخطاء الـ rendering مع loading skeletons
 - ✅ اختبارات وحدة مع Vitest
+- ✅ نظام تقديم طلبات حجز عامة (بدون حساب)
+- ✅ إصلاحات شاملة للواجهة (RTL والموبايل)
 
 ## المتطلبات
 
@@ -73,6 +75,8 @@ scripts/001_create_tables.sql     — إنشاء الجداول
 scripts/002_seed_data.sql         — بيانات تجريبية (اختياري)
 scripts/003_add_roles_and_rls.sql — أدوار المستخدمين وسياسات الأمان
 scripts/004_add_missing_fields.sql — حقول الحذف الناعم والمدفوعات
+scripts/005_booking_requests.sql   — نظام طلبات الحجز العامة
+scripts/006_fix_rooms_rls.sql      — إصلاح صلاحيات رؤية القاعات للجمهور
 ```
 
 ## هيكل المشروع
@@ -146,4 +150,4 @@ MIT License
 
 ---
 
-صُنع بـ ❤️ لبلدية مدابا — الإصدار 1.1.0
+صُنع بـ ❤️ لبلدية مدابا — الإصدار 1.1.1

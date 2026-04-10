@@ -2,7 +2,7 @@
 
 This document contains guidelines and project context for AI assistants (like Claude, Gemini, Roo Cline) working on the **AhmedHall** (Municipality Hall Booking System) repository.
 
-- **Version:** 1.1.0
+- **Version:** 1.1.2
 - **Package name:** madabahalls
 - **Live URL:** [madabahalls.vercel.app](https://madabahalls.vercel.app)
 - **GitHub:** [Abdoocoder/AhmedHall](https://github.com/Abdoocoder/AhmedHall)
@@ -84,6 +84,8 @@ This document contains guidelines and project context for AI assistants (like Cl
 | `scripts/002_seed_data.sql` | Applied | Seed data |
 | `scripts/003_add_roles_and_rls.sql` | Applied | user_roles table + role-based RLS policies |
 | `scripts/004_add_missing_fields.sql` | Applied | Added deleted_at (soft delete), payment_amount, payment_date to bookings |
+| `scripts/005_booking_requests.sql` | Applied | Booking Requests system (public form) |
+| `scripts/006_fix_rooms_rls.sql` | Applied | Fix rooms visibility for public users |
 
 ## Developer Guidelines
 
@@ -194,3 +196,4 @@ Overall Score: 7.5/10
 | `/calendar` | FullCalendar view |
 | `/rooms` | Room management |
 | `/organizations` | Organization management |
+| `/request` | Public booking request form |

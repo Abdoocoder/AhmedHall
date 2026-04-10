@@ -1,6 +1,6 @@
 # Municipality Hall Booking System — MadabaHalls
 
-![Version](https://img.shields.io/badge/version-1.1.0-brightgreen?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-1.1.1-brightgreen?style=for-the-badge)
 ![Next.js](https://img.shields.io/badge/Next.js-15.5.15-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7.3-blue?style=for-the-badge&logo=typescript)
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green?style=for-the-badge&logo=supabase)
@@ -28,6 +28,8 @@ A comprehensive system for managing event hall bookings in municipality faciliti
 - ✅ Payment tracking (amount and payment date)
 - ✅ Error boundaries and loading skeletons on all pages
 - ✅ Unit tests with Vitest
+- ✅ Public booking request system (no account required)
+- ✅ Comprehensive UI fixes (RTL and Mobile support)
 
 ## Prerequisites
 
@@ -73,6 +75,8 @@ scripts/001_create_tables.sql      — Create tables
 scripts/002_seed_data.sql          — Seed data (optional)
 scripts/003_add_roles_and_rls.sql  — User roles and RLS policies
 scripts/004_add_missing_fields.sql — Soft delete and payment fields
+scripts/005_booking_requests.sql   — Public booking request system
+scripts/006_fix_rooms_rls.sql      — Fix rooms visibility for public users
 ```
 
 ## Project Structure
@@ -146,4 +150,4 @@ MIT License
 
 ---
 
-Made with ❤️ for Madaba Municipality — Version 1.1.0
+Made with ❤️ for Madaba Municipality — Version 1.1.1
