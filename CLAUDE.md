@@ -54,13 +54,22 @@ This document contains guidelines and project context for AI assistants (like Cl
 
 - **organizations**: id, name, contact_person, phone, email, created_at, updated_at
 - **rooms**: id, name, capacity, description, is_active, created_at, updated_at
-- **bookings**: id, organization_id, room_id, booking_date, start_time, end_time, event_name, coordinator_name, coordinator_phone, attendees_count, payment_status (enum), notes, created_at, updated_at
+- **bookings**: id, org_id, room_id, booking_date, start_time, end_time, event_name, coordinator_name, coordinator_phone, attendees_count, payment_status (enum), notes, created_at, updated_at *(12 fields)*
+- **user_roles**: id, user_id, role (admin/manager/user)
 
 ### Security Features
 
-- Row Level Security (RLS) enabled on all tables
+- Row Level Security (RLS) enabled on all tables with role-based policies
+- `gen_random_uuid()` for auto IDs
+- `CONSTRAINT valid_time_range` — enforces booking time logic
 - Booking conflict prevention trigger
 - Indexes for query performance
+
+### Known Database Gaps
+
+- No `created_by` field for audit tracking
+- No `deleted_at` for soft delete
+- No `payment_amount` or `payment_date` fields
 
 ## Developer Guidelines
 
@@ -124,22 +133,56 @@ npm run start
 
 ## Code Review Findings
 
+Overall Score: 7.5/10
+
+| Area            | Score  | Notes                                   |
+| --------------- | ------ | --------------------------------------- |
+| Code Quality    | 8/10   | TypeScript strict, clean structure      |
+| Database        | 8/10   | Good schema, missing soft delete/audit  |
+| Security        | 6/10   | RLS enabled but too permissive          |
+| UI/UX           | 7.5/10 | Good components, missing loading states |
+| Documentation   | 7/10   | CLAUDE.md exists, good context          |
+| Maintainability | 7/10   | Duplicate files issue                   |
+
 ### Strengths
 
 - Modern App Router architecture with route groups
-- Comprehensive TypeScript types
-- Nabataean calendar integration
-- Full shadcn/ui component library
+- TypeScript strict mode — fully typed codebase
+- Nabataean calendar integration (Arabic/Jordanian months)
+- Full shadcn/ui component library (60+ components)
 - Database triggers for conflict prevention
-- RLS policies for security
+- RTL support throughout the UI
+- Zod + React Hook Form for validated forms
+- Role-based RLS policies (admin/manager/user)
 
-### Areas for Improvement
+### Security Concerns
 
-1. **Dependencies:** Next.js 16.2.0 and React 19 are experimental
-2. **Security:** RLS policies use `USING (true)` - overly permissive
-3. **Database:** No `created_by` field for audit tracking, no soft delete
-4. **UX:** Missing loading skeletons and error boundaries
-5. **Files:** Duplicate hooks in `/hooks` and `/components/ui`
+- `USING (true)` in RLS policies (`scripts/003_add_roles_and_rls.sql:51`) — overly permissive, allows all authenticated users to read all bookings
+- `SECURITY DEFINER` used in some functions — review carefully
+- No rate limiting
+- No explicit CSRF protection
+
+### Improvement Priorities
+
+**High:**
+
+1. Fix RLS — replace `USING (true)` with role-scoped policies
+2. Remove duplicate hooks — delete `/hooks/use-toast.ts` and `/hooks/use-mobile.ts` (duplicates of `components/ui/use-*`)
+3. Add `deleted_at` for soft delete
+4. Add `payment_amount` and `payment_date` to bookings table
+
+**Medium:**
+
+1. Add error boundaries
+2. Add loading skeletons
+3. Add rate limiting
+4. Improve `middleware.ts`
+
+**Low:**
+
+1. Downgrade Next.js 16 → 15 (current version is experimental)
+2. Add unit tests (Vitest or Jest)
+3. Rename package from "my-project" to "ahmedhall" in `package.json`
 
 ## Page Routes
 
