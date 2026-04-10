@@ -38,10 +38,10 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/20 via-background to-accent/20 p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/10 p-4">
+      <Card className="w-full max-w-md border-primary/20 bg-card/80 backdrop-blur">
         <CardHeader className="space-y-4 text-center">
-          <div className="mx-auto relative w-20 h-20">
+          <div className="mx-auto relative w-24 h-24">
             <Image
               src="/logo.png"
               alt="شعار البلدية"
@@ -51,48 +51,50 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <CardTitle className="text-2xl">نظام حجوزات قاعة البلدية</CardTitle>
-            <CardDescription>سجّل دخولك للوصول إلى النظام</CardDescription>
+            <CardTitle className="text-3xl font-bold tracking-tight"> AhmedHall</CardTitle>
+            <CardDescription className="mt-2 text-muted-foreground">نظام حجوزات قاعة البلدية - GPU Computing</CardDescription>
           </div>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
             {error && (
-              <div className="p-3 text-sm text-red-500 bg-red-50 rounded-md">
-                {error}
+              <div className="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md font-mono">
+                ERROR: {error}
               </div>
             )}
             
             <div className="space-y-2">
-              <label className="text-sm font-medium">البريد الإلكتروني</label>
+              <label className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Email</label>
               <Input
                 type="email"
-                placeholder="name@example.com"
+                placeholder="admin@ahmedhall.jo"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 dir="ltr"
+                className="font-mono border-primary/30 focus:border-primary"
               />
             </div>
             
             <div className="space-y-2">
-              <label className="text-sm font-medium">كلمة المرور</label>
+              <label className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Password</label>
               <Input
                 type="password"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="font-mono border-primary/30 focus:border-primary"
               />
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "جاري الدخول..." : "تسجيل الدخول"}
+            <Button type="submit" className="w-full font-semibold tracking-wide bg-primary hover:bg-primary/90" disabled={loading}>
+              {loading ? "INITIALIZING..." : "AUTHENTICATE"}
             </Button>
           </form>
 
-          <div className="mt-4 text-center text-sm text-muted-foreground">
-            <p>للحصول على حساب، يرجى التواصل مع مدير النظام</p>
+          <div className="mt-6 text-center text-xs text-muted-foreground border-t border-border pt-4">
+            <p className="font-mono">NVIDIA® AhmedHall Reserved.</p>
           </div>
         </CardContent>
       </Card>

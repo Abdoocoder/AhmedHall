@@ -11,10 +11,10 @@ export default function DashboardLayout({
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger className="-mr-1" />
-          <Separator orientation="vertical" className="mx-2 h-4" />
-          <h1 className="text-lg font-semibold">نظام حجوزات قاعة البلدية</h1>
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background/80 backdrop-blur px-4">
+          <SidebarTrigger className="-mr-1 hover:bg-primary/10" />
+          <Separator orientation="vertical" className="mx-2 h-4 bg-primary/30" />
+          <h1 className="text-lg font-bold tracking-wide font-mono">AHMEDHALL<span className="text-primary/60 text-sm font-normal">_DASHBOARD</span></h1>
         </header>
         <main className="flex-1 overflow-auto p-6">
           {children}
