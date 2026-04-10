@@ -9,7 +9,7 @@ export default async function CalendarPage() {
       *,
       organization:organizations(*),
       room:rooms(*)
-    `),
+    `).is("deleted_at", null),
     supabase.from("rooms").select("*").eq("is_active", true).order("name"),
   ])
 

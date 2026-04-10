@@ -30,6 +30,7 @@ export default async function BookingsPage({
       `,
         { count: "exact" }
       )
+      .is("deleted_at", null)
       .order("booking_date", { ascending: false })
       .range(from, to),
     supabase.from("rooms").select("*").eq("is_active", true).order("name"),

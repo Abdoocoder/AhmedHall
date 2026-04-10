@@ -20,16 +20,19 @@ export default async function DashboardPage() {
     supabase
       .from("bookings")
       .select("*", { count: "exact", head: true })
+      .is("deleted_at", null)
       .gte("booking_date", firstDayOfMonth.toISOString().split("T")[0])
       .lte("booking_date", lastDayOfMonth.toISOString().split("T")[0]),
     supabase
       .from("bookings")
       .select("booking_date")
+      .is("deleted_at", null)
       .gte("booking_date", firstDayOfMonth.toISOString().split("T")[0])
       .lte("booking_date", lastDayOfMonth.toISOString().split("T")[0]),
     supabase
       .from("bookings")
       .select("*", { count: "exact", head: true })
+      .is("deleted_at", null)
       .eq("payment_status", "pending"),
     supabase
       .from("rooms")
@@ -47,6 +50,7 @@ export default async function DashboardPage() {
       organization:organizations(*),
       room:rooms(*)
     `)
+    .is("deleted_at", null)
     .gte("booking_date", today.toISOString().split("T")[0])
     .order("booking_date", { ascending: true })
     .order("start_time", { ascending: true })
