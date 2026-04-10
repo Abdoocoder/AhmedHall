@@ -2,7 +2,7 @@
 
 This document contains guidelines and project context for AI assistants (like Claude, Gemini, Roo Cline) working on the **AhmedHall** (Municipality Hall Booking System) repository.
 
-- **Version:** 1.0.0
+- **Version:** 1.1.0
 - **Package name:** madabahalls
 - **Live URL:** [madabahalls.vercel.app](https://madabahalls.vercel.app)
 - **GitHub:** [Abdoocoder/AhmedHall](https://github.com/Abdoocoder/AhmedHall)
@@ -13,7 +13,7 @@ This document contains guidelines and project context for AI assistants (like Cl
 
 ## Technology Stack
 
-- **Framework:** Next.js 16.2.0 (App Router)
+- **Framework:** Next.js 15.5.15 (App Router)
 - **UI & Components:** React 19, Radix UI primitives (`@radix-ui/react-*`)
 - **Styling:** Tailwind CSS v4, Shadcn UI, Embla Carousel
 - **Forms & Validation:** React Hook Form + Zod
@@ -30,7 +30,9 @@ This document contains guidelines and project context for AI assistants (like Cl
 | `npm run start` | Running the compiled production server |
 | `npm run typecheck` | Runs TypeScript compiler (`tsc --noEmit`) to verify types |
 | `npm run eslint` | Runs the Next linting script |
-| `npm run test:coverage` | *(Currently not implemented. Requires integration of Vitest or Jest).* |
+| `npm test` | Runs all Vitest unit tests |
+| `npm run test:watch` | Runs Vitest in watch mode |
+| `npm run test:coverage` | Runs Vitest with coverage report |
 
 ## Architecture & Directory Structure
 
