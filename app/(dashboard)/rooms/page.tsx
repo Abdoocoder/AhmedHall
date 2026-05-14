@@ -1,11 +1,13 @@
 "use client"
 
+import { useEffect } from "react"
 import { useQuery } from "convex/react"
 import { RoomsGrid } from "@/components/rooms/rooms-grid"
 import { RoomDialog } from "@/components/rooms/room-dialog"
 import { api } from "@/convex/_generated/api"
 
 export default function RoomsPage() {
+  useEffect(() => { document.title = 'القاعات | نظام حجوزات قاعة البلدية' }, [])
   const rooms = useQuery(api.rooms.list) ?? []
 
   return (

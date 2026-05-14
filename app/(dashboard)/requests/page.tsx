@@ -1,10 +1,12 @@
 "use client"
 
+import { useEffect } from "react"
 import { useQuery } from "convex/react"
 import { RequestsTable } from "@/components/booking-requests/requests-table"
 import { api } from "@/convex/_generated/api"
 
 export default function RequestsPage() {
+  useEffect(() => { document.title = 'طلبات الحجز | نظام حجوزات قاعة البلدية' }, [])
   const requests = useQuery(api.bookingRequests.list) ?? []
 
   return (

@@ -218,6 +218,7 @@ export function BookingsTable({
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
+            aria-label="بحث عن حجوزات"
             placeholder="بحث..."
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
@@ -230,7 +231,7 @@ export function BookingsTable({
             table.getColumn("room_name")?.setFilterValue(value === "all" ? "" : value)
           }
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="جميع القاعات" />
           </SelectTrigger>
           <SelectContent>
@@ -248,7 +249,7 @@ export function BookingsTable({
             table.getColumn("paymentStatus")?.setFilterValue(value === "all" ? "" : value)
           }
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="حالة الدفع" />
           </SelectTrigger>
           <SelectContent>

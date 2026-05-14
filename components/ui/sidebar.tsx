@@ -206,7 +206,8 @@ function Sidebar({
   }
 
   return (
-    <div
+    <nav
+      aria-label="القائمة الرئيسية"
       className="group peer text-sidebar-foreground hidden md:block"
       data-state={state}
       data-collapsible={state === 'collapsed' ? collapsible : ''}
@@ -249,7 +250,7 @@ function Sidebar({
           {children}
         </div>
       </div>
-    </div>
+    </nav>
   )
 }
 

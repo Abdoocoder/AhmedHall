@@ -69,7 +69,7 @@ export function AppSidebar() {
     <Sidebar side="right" collapsible="icon" className="border-l-0">
       <SidebarHeader className="border-b-0 p-6 pb-4">
         <div className="flex items-center gap-3">
-          <div className="relative size-12 overflow-hidden rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.04)]">
+          <div className="relative size-12 overflow-hidden rounded-xl shadow-sm">
             <Image
               src="/logo.png"
               alt="شعار البلدية"

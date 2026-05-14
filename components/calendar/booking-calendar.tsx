@@ -87,7 +87,7 @@ export function BookingCalendar({ bookings, rooms }: BookingCalendarProps) {
     <div className="space-y-4">
       <div className="flex items-center gap-4">
         <Select value={filterRoom} onValueChange={setFilterRoom}>
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="w-full sm:w-[200px]">
             <SelectValue placeholder="جميع القاعات" />
           </SelectTrigger>
           <SelectContent>

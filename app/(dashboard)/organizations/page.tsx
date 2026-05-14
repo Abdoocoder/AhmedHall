@@ -1,11 +1,13 @@
 "use client"
 
+import { useEffect } from "react"
 import { useQuery } from "convex/react"
 import { OrganizationsTable } from "@/components/organizations/organizations-table"
 import { OrganizationDialog } from "@/components/organizations/organization-dialog"
 import { api } from "@/convex/_generated/api"
 
 export default function OrganizationsPage() {
+  useEffect(() => { document.title = 'الجهات | نظام حجوزات قاعة البلدية' }, [])
   const organizations = useQuery(api.organizations.list) ?? []
 
   return (

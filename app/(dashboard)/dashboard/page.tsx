@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import { useQuery } from "convex/react"
 import { StatsCards } from "@/components/dashboard/stats-cards"
 import { UpcomingBookings } from "@/components/dashboard/upcoming-bookings"
@@ -7,6 +8,7 @@ import { formatNabataeanMonthYear } from "@/lib/nabataean-calendar"
 import { api } from "@/convex/_generated/api"
 
 export default function DashboardPage() {
+  useEffect(() => { document.title = 'الرئيسية | نظام حجوزات قاعة البلدية' }, [])
   const stats = useQuery(api.bookings.getStats)
   const upcomingBookings = useQuery(api.bookings.listUpcoming)
 

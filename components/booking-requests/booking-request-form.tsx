@@ -91,7 +91,7 @@ export function BookingRequestForm({ rooms }: { rooms: { _id: string; name: stri
     return (
       <Card>
         <CardContent className="flex flex-col items-center gap-4 py-16 text-center">
-          <CheckCircle2 className="h-16 w-16 text-green-500" />
+          <CheckCircle2 className="h-16 w-16 text-chart-2" />
           <h2 className="text-2xl font-bold">تم إرسال طلبك بنجاح!</h2>
           <p className="text-muted-foreground max-w-sm">
             سيتم مراجعة طلبك من قِبل موظفي البلدية والتواصل معك على رقم الهاتف المُدخل لتأكيد الحجز وترتيب الدفع.
