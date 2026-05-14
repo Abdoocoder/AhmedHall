@@ -9,7 +9,7 @@ export function RequestPageClient() {
   const availableRooms = rooms ?? []
 
   return (
-    <div className="min-h-screen bg-muted/30" dir="rtl">
+    <div className="min-h-dvh bg-muted/30" dir="rtl">
       <div className="mx-auto max-w-2xl px-4 py-12">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold">طلب حجز قاعة</h1>
@@ -19,6 +19,11 @@ export function RequestPageClient() {
         </div>
         {rooms === undefined ? (
           <div className="text-center py-8 text-muted-foreground">جاري التحميل...</div>
+        ) : availableRooms.length === 0 ? (
+          <div className="text-center py-12 text-muted-foreground">
+            <p className="text-lg font-medium">لا توجد قاعات متاحة حالياً</p>
+            <p className="mt-1">نأسف، لا تتوفر قاعات للحجز في الوقت الحالي. يرجى المحاولة لاحقاً.</p>
+          </div>
         ) : (
           <BookingRequestForm rooms={availableRooms} />
         )}

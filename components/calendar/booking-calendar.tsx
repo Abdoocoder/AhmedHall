@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useRef } from "react"
 import FullCalendar from "@fullcalendar/react"
 import dayGridPlugin from "@fullcalendar/daygrid"
 import timeGridPlugin from "@fullcalendar/timegrid"
@@ -28,7 +28,6 @@ interface BookingCalendarProps {
   rooms: Room[]
 }
 
-const roomColors: Record<string, string> = {}
 const colorPalette = [
   "var(--chart-1)",
   "var(--chart-2)",
@@ -37,13 +36,6 @@ const colorPalette = [
   "var(--chart-5)",
   "var(--primary)",
 ]
-
-function getRoomColor(roomId: string, index: number): string {
-  if (!roomColors[roomId]) {
-    roomColors[roomId] = colorPalette[index % colorPalette.length]
-  }
-  return roomColors[roomId]
-}
 
 const paymentStatusMap = {
   pending: { label: "قيد الانتظار", variant: "secondary" as const },
@@ -62,6 +54,14 @@ function formatTime(timeString: string) {
 export function BookingCalendar({ bookings, rooms }: BookingCalendarProps) {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)
   const [filterRoom, setFilterRoom] = useState<string>("all")
+  const roomColors = useRef<Record<string, string>>({})
+
+  function getRoomColor(roomId: string, index: number): string {
+    if (!roomColors.current[roomId]) {
+      roomColors.current[roomId] = colorPalette[index % colorPalette.length]
+    }
+    return roomColors.current[roomId]
+  }
 
   const filteredBookings = useMemo(() => {
     if (filterRoom === "all") return bookings
@@ -87,7 +87,7 @@ export function BookingCalendar({ bookings, rooms }: BookingCalendarProps) {
     <div className="space-y-4">
       <div className="flex items-center gap-4">
         <Select value={filterRoom} onValueChange={setFilterRoom}>
-          <SelectTrigger className="w-full sm:w-[200px]">
+          <SelectTrigger className="w-full sm:w-[200px]" aria-label="تصفية حسب القاعة">
             <SelectValue placeholder="جميع القاعات" />
           </SelectTrigger>
           <SelectContent>

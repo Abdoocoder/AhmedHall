@@ -14,7 +14,7 @@ export default function BookingsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">إدارة الحجوزات</h2>
           <p className="text-muted-foreground">عرض وإدارة جميع حجوزات القاعات</p>
