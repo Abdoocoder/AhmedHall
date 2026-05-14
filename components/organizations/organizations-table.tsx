@@ -60,9 +60,9 @@ export function OrganizationsTable({ organizations }: OrganizationsTableProps) {
         </TableHeader>
         <TableBody>
           {organizations.map((org) => (
-            <TableRow key={org.id}>
+            <TableRow key={org._id}>
               <TableCell className="font-medium">{org.name}</TableCell>
-              <TableCell>{org.contact_person || "-"}</TableCell>
+              <TableCell>{org.contactPerson || "-"}</TableCell>
               <TableCell dir="ltr" className="text-right">{org.phone || "-"}</TableCell>
               <TableCell dir="ltr" className="text-right">{org.email || "-"}</TableCell>
               <TableCell>

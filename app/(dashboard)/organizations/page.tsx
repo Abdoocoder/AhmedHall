@@ -1,14 +1,12 @@
-import { createClient } from "@/lib/supabase/server"
+"use client"
+
+import { useQuery } from "convex/react"
 import { OrganizationsTable } from "@/components/organizations/organizations-table"
 import { OrganizationDialog } from "@/components/organizations/organization-dialog"
+import { api } from "@/convex/_generated/api"
 
-export default async function OrganizationsPage() {
-  const supabase = await createClient()
-
-  const { data: organizations } = await supabase
-    .from("organizations")
-    .select("*")
-    .order("name")
+export default function OrganizationsPage() {
+  const organizations = useQuery(api.organizations.list) ?? []
 
   return (
     <div className="space-y-6">
@@ -22,7 +20,7 @@ export default async function OrganizationsPage() {
         <OrganizationDialog />
       </div>
 
-      <OrganizationsTable organizations={organizations ?? []} />
+      <OrganizationsTable organizations={organizations} />
     </div>
   )
 }

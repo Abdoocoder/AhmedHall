@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useEffect } from "react"
+import { useState, useMemo } from "react"
 import FullCalendar from "@fullcalendar/react"
 import dayGridPlugin from "@fullcalendar/daygrid"
 import timeGridPlugin from "@fullcalendar/timegrid"
@@ -20,22 +20,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import type { BookingWithRelations, Room } from "@/lib/types"
-import { formatNabataeanDate, getNabataeanMonthGenitive, formatNabataeanMonthYear } from "@/lib/nabataean-calendar"
+import type { Booking, Room } from "@/lib/types"
+import { formatNabataeanDate, formatNabataeanMonthYear } from "@/lib/nabataean-calendar"
 
 interface BookingCalendarProps {
-  bookings: BookingWithRelations[]
+  bookings: Booking[]
   rooms: Room[]
 }
 
 const roomColors: Record<string, string> = {}
 const colorPalette = [
-  "#3b82f6", // blue
-  "#10b981", // emerald
-  "#f59e0b", // amber
-  "#ef4444", // red
-  "#8b5cf6", // violet
-  "#ec4899", // pink
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
+  "var(--primary)",
 ]
 
 function getRoomColor(roomId: string, index: number): string {
@@ -60,24 +60,24 @@ function formatTime(timeString: string) {
 }
 
 export function BookingCalendar({ bookings, rooms }: BookingCalendarProps) {
-  const [selectedBooking, setSelectedBooking] = useState<BookingWithRelations | null>(null)
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)
   const [filterRoom, setFilterRoom] = useState<string>("all")
 
   const filteredBookings = useMemo(() => {
     if (filterRoom === "all") return bookings
-    return bookings.filter((b) => b.room_id === filterRoom)
+    return bookings.filter((b) => b.roomId === filterRoom)
   }, [bookings, filterRoom])
 
   const events = useMemo(() => {
     return filteredBookings.map((booking, index) => {
-      const roomIndex = rooms.findIndex((r) => r.id === booking.room_id)
+      const roomIndex = rooms.findIndex((r) => r._id === booking.roomId)
       return {
-        id: booking.id,
-        title: `${booking.event_name} - ${booking.room?.name}`,
-        start: `${booking.booking_date}T${booking.start_time}`,
-        end: `${booking.booking_date}T${booking.end_time}`,
-        backgroundColor: getRoomColor(booking.room_id, roomIndex >= 0 ? roomIndex : index),
-        borderColor: getRoomColor(booking.room_id, roomIndex >= 0 ? roomIndex : index),
+        id: booking._id,
+        title: `${booking.eventName} - ${booking.room?.name}`,
+        start: `${booking.bookingDate}T${booking.startTime}`,
+        end: `${booking.bookingDate}T${booking.endTime}`,
+        backgroundColor: getRoomColor(booking.roomId, roomIndex >= 0 ? roomIndex : index),
+        borderColor: getRoomColor(booking.roomId, roomIndex >= 0 ? roomIndex : index),
         extendedProps: { booking },
       }
     })
@@ -93,11 +93,11 @@ export function BookingCalendar({ bookings, rooms }: BookingCalendarProps) {
           <SelectContent>
             <SelectItem value="all">جميع القاعات</SelectItem>
             {rooms.map((room, index) => (
-              <SelectItem key={room.id} value={room.id}>
+              <SelectItem key={room._id} value={room._id}>
                 <div className="flex items-center gap-2">
                   <div
                     className="size-3 rounded-full"
-                    style={{ backgroundColor: getRoomColor(room.id, index) }}
+                    style={{ backgroundColor: getRoomColor(room._id, index) }}
                   />
                   {room.name}
                 </div>
@@ -125,7 +125,7 @@ export function BookingCalendar({ bookings, rooms }: BookingCalendarProps) {
           }}
           events={events}
           eventClick={(info) => {
-            const booking = info.event.extendedProps.booking as BookingWithRelations
+            const booking = info.event.extendedProps.booking as Booking
             setSelectedBooking(booking)
           }}
           height="auto"
@@ -142,7 +142,7 @@ export function BookingCalendar({ bookings, rooms }: BookingCalendarProps) {
       <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{selectedBooking?.event_name}</DialogTitle>
+            <DialogTitle>{selectedBooking?.eventName}</DialogTitle>
             <DialogDescription>تفاصيل الحجز</DialogDescription>
           </DialogHeader>
           {selectedBooking && (
@@ -159,33 +159,33 @@ export function BookingCalendar({ bookings, rooms }: BookingCalendarProps) {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">التاريخ:</span>
                   <span className="font-medium">
-                    {formatNabataeanDate(selectedBooking.booking_date)}
+                    {formatNabataeanDate(selectedBooking.bookingDate)}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">الوقت:</span>
                   <span className="font-medium">
-                    {formatTime(selectedBooking.start_time)} - {formatTime(selectedBooking.end_time)}
+                    {formatTime(selectedBooking.startTime)} - {formatTime(selectedBooking.endTime)}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">المنسق:</span>
-                  <span className="font-medium">{selectedBooking.coordinator_name}</span>
+                  <span className="font-medium">{selectedBooking.coordinatorName}</span>
                 </div>
-                {selectedBooking.coordinator_phone && (
+                {selectedBooking.coordinatorPhone && (
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">الهاتف:</span>
-                    <span className="font-medium" dir="ltr">{selectedBooking.coordinator_phone}</span>
+                    <span className="font-medium" dir="ltr">{selectedBooking.coordinatorPhone}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">عدد الحضور:</span>
-                  <span className="font-medium">{selectedBooking.attendees_count} شخص</span>
+                  <span className="font-medium">{selectedBooking.attendeesCount} شخص</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">حالة الدفع:</span>
-                  <Badge variant={paymentStatusMap[selectedBooking.payment_status].variant}>
-                    {paymentStatusMap[selectedBooking.payment_status].label}
+                  <Badge variant={paymentStatusMap[selectedBooking.paymentStatus].variant}>
+                    {paymentStatusMap[selectedBooking.paymentStatus].label}
                   </Badge>
                 </div>
                 {selectedBooking.notes && (

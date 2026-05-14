@@ -1,74 +1,72 @@
 export type PaymentStatus = 'pending' | 'paid' | 'cancelled'
 
 export interface Organization {
-  id: string
+  _id: string
+  _creationTime: number
   name: string
-  contact_person: string | null
-  phone: string | null
-  email: string | null
-  created_at: string
-  updated_at: string
+  contactPerson?: string
+  phone?: string
+  email?: string
+  createdAt: number
+  updatedAt: number
 }
 
 export interface Room {
-  id: string
+  _id: string
+  _creationTime: number
   name: string
   capacity: number
-  description: string | null
-  is_active: boolean
-  created_at: string
-  updated_at: string
+  description?: string
+  isActive: boolean
+  createdAt: number
+  updatedAt: number
 }
 
 export interface Booking {
-  id: string
-  organization_id: string
-  room_id: string
-  booking_date: string
-  start_time: string
-  end_time: string
-  event_name: string
-  coordinator_name: string
-  coordinator_phone: string | null
-  attendees_count: number
-  payment_status: PaymentStatus
-  payment_amount: number | null
-  payment_date: string | null
-  notes: string | null
-  deleted_at: string | null
-  created_at: string
-  updated_at: string
-}
-
-export interface BookingWithRelations extends Booking {
-  organization: Organization
-  room: Room
+  _id: string
+  _creationTime: number
+  orgId: string
+  roomId: string
+  bookingDate: string
+  startTime: string
+  endTime: string
+  eventName: string
+  coordinatorName: string
+  coordinatorPhone?: string
+  attendeesCount: number
+  paymentStatus: PaymentStatus
+  paymentAmount?: number
+  paymentDate?: string
+  notes?: string
+  deletedAt?: number
+  createdAt: number
+  updatedAt: number
+  organization?: Organization | null
+  room?: Room | null
 }
 
 export type RequestStatus = 'pending' | 'approved' | 'rejected'
 
 export interface BookingRequest {
-  id: string
-  event_name: string
-  booking_date: string
-  start_time: string
-  end_time: string
-  attendees_count: number
-  notes: string | null
-  room_id: string
-  citizen_name: string
-  citizen_phone: string
-  citizen_email: string | null
-  organization_name: string
+  _id: string
+  _creationTime: number
+  eventName: string
+  bookingDate: string
+  startTime: string
+  endTime: string
+  attendeesCount: number
+  notes?: string
+  roomId: string
+  room?: Room | null
+  citizenName: string
+  citizenPhone: string
+  citizenEmail?: string
+  organizationName: string
   status: RequestStatus
-  rejection_reason: string | null
-  reviewed_at: string | null
-  created_at: string
-  updated_at: string
-}
-
-export interface BookingRequestWithRoom extends BookingRequest {
-  room: Room
+  rejectionReason?: string
+  reviewedAt?: number
+  createdAt: number
+  updatedAt: number
 }
 
 export interface DashboardStats {

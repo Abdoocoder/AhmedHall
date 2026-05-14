@@ -2,7 +2,8 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
+import { useClerk } from "@clerk/nextjs"
 import {
   LayoutDashboard,
   Calendar,
@@ -10,7 +11,6 @@ import {
   Building2,
   Users,
   LogOut,
-  Settings,
   Inbox,
 } from "lucide-react"
 
@@ -26,7 +26,6 @@ import {
   SidebarMenuItem,
   SidebarFooter,
 } from "@/components/ui/sidebar"
-import { logout } from "@/app/actions/auth"
 
 const menuItems = [
   {
@@ -63,6 +62,8 @@ const menuItems = [
 
 export function AppSidebar() {
   const pathname = usePathname()
+  const router = useRouter()
+  const { signOut } = useClerk()
 
   return (
     <Sidebar side="right" collapsible="icon" className="border-l-0">
@@ -74,7 +75,7 @@ export function AppSidebar() {
               alt="شعار البلدية"
               fill
               className="object-contain"
-              unoptimized
+              sizes="48px"
             />
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
@@ -109,7 +110,7 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter className="border-t-0 p-4">
         <SidebarMenuButton
-          onClick={() => logout()}
+          onClick={() => signOut({ redirectUrl: "/auth/login" })}
           tooltip="تسجيل الخروج"
           className="w-full cursor-pointer rounded-full hover:bg-destructive/10 text-destructive hover:text-destructive"
         >

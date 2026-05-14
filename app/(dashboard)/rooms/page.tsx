@@ -1,14 +1,12 @@
-import { createClient } from "@/lib/supabase/server"
+"use client"
+
+import { useQuery } from "convex/react"
 import { RoomsGrid } from "@/components/rooms/rooms-grid"
 import { RoomDialog } from "@/components/rooms/room-dialog"
+import { api } from "@/convex/_generated/api"
 
-export default async function RoomsPage() {
-  const supabase = await createClient()
-
-  const { data: rooms } = await supabase
-    .from("rooms")
-    .select("*")
-    .order("name")
+export default function RoomsPage() {
+  const rooms = useQuery(api.rooms.list) ?? []
 
   return (
     <div className="space-y-6">
@@ -22,7 +20,7 @@ export default async function RoomsPage() {
         <RoomDialog />
       </div>
 
-      <RoomsGrid rooms={rooms ?? []} />
+      <RoomsGrid rooms={rooms} />
     </div>
   )
 }

@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useTransition } from "react"
-import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { useMutation } from "convex/react"
 import { toast } from "sonner"
 import { CheckCircle, XCircle, Clock, Eye } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
@@ -18,9 +18,9 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { Spinner } from "@/components/ui/spinner"
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty"
-import { approveBookingRequest, rejectBookingRequest } from "@/app/actions/booking-requests"
+import { api } from "@/convex/_generated/api"
 import { formatNabataeanDate } from "@/lib/nabataean-calendar"
-import type { BookingRequestWithRoom } from "@/lib/types"
+import type { BookingRequest } from "@/lib/types"
 
 const statusMap = {
   pending:  { label: "قيد المراجعة", variant: "secondary" as const, icon: Clock },
@@ -34,32 +34,40 @@ function formatTime(t: string) {
   return `${hour % 12 || 12}:${m} ${hour >= 12 ? "م" : "ص"}`
 }
 
-export function RequestsTable({ requests }: { requests: BookingRequestWithRoom[] }) {
-  const [selected, setSelected] = useState<BookingRequestWithRoom | null>(null)
-  const [rejectDialog, setRejectDialog] = useState<BookingRequestWithRoom | null>(null)
+export function RequestsTable({ requests }: { requests: BookingRequest[] }) {
+  const [selected, setSelected] = useState<BookingRequest | null>(null)
+  const [rejectDialog, setRejectDialog] = useState<BookingRequest | null>(null)
   const [rejectReason, setRejectReason] = useState("")
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
+  const [isPending, setIsPending] = useState(false)
+  const approveRequest = useMutation(api.bookingRequests.approve)
+  const rejectRequest = useMutation(api.bookingRequests.reject)
 
-  function handleApprove(req: BookingRequestWithRoom) {
-    startTransition(async () => {
-      const result = await approveBookingRequest(req.id)
-      if (result.error) { toast.error(result.error); return }
+  async function handleApprove(req: BookingRequest) {
+    setIsPending(true)
+    try {
+      await approveRequest({ id: req._id as any })
       toast.success("تم قبول الطلب وإنشاء الحجز")
-      router.refresh()
-    })
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "حدث خطأ أثناء قبول الطلب"
+      toast.error(message)
+    } finally {
+      setIsPending(false)
+    }
   }
 
-  function handleReject() {
+  async function handleReject() {
     if (!rejectDialog) return
-    startTransition(async () => {
-      const result = await rejectBookingRequest(rejectDialog.id, rejectReason)
-      if (result.error) { toast.error(result.error); return }
+    setIsPending(true)
+    try {
+      await rejectRequest({ id: rejectDialog._id as any, reason: rejectReason || undefined })
       toast.success("تم رفض الطلب")
       setRejectDialog(null)
       setRejectReason("")
-      router.refresh()
-    })
+    } catch {
+      toast.error("حدث خطأ أثناء رفض الطلب")
+    } finally {
+      setIsPending(false)
+    }
   }
 
   if (requests.length === 0) {
@@ -85,25 +93,25 @@ export function RequestsTable({ requests }: { requests: BookingRequestWithRoom[]
           const status = statusMap[req.status]
           const StatusIcon = status.icon
           return (
-            <Card key={req.id} className="transition-shadow hover:shadow-md">
+            <Card key={req._id} className="transition-[transform,box-shadow] duration-200 ease-out-expo motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md">
               <CardContent className="p-4">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold">{req.event_name}</span>
+                      <span className="font-semibold">{req.eventName}</span>
                       <Badge variant={status.variant} className="gap-1">
                         <StatusIcon className="h-3 w-3" />
                         {status.label}
                       </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      {req.organization_name} — {req.room?.name}
+                      {req.organizationName} — {req.room?.name}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {formatNabataeanDate(req.booking_date)} | {formatTime(req.start_time)} - {formatTime(req.end_time)}
+                      {formatNabataeanDate(req.bookingDate)} | {formatTime(req.startTime)} - {formatTime(req.endTime)}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {req.citizen_name} — {req.citizen_phone}
+                      {req.citizenName} — {req.citizenPhone}
                     </p>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
@@ -135,22 +143,22 @@ export function RequestsTable({ requests }: { requests: BookingRequestWithRoom[]
       <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{selected?.event_name}</DialogTitle>
+            <DialogTitle>{selected?.eventName}</DialogTitle>
             <DialogDescription>تفاصيل طلب الحجز</DialogDescription>
           </DialogHeader>
           {selected && (
             <div className="grid gap-2 text-sm" dir="rtl">
               {[
-                ["الجهة",         selected.organization_name],
+                ["الجهة",         selected.organizationName],
                 ["القاعة",        selected.room?.name],
-                ["التاريخ",       formatNabataeanDate(selected.booking_date)],
-                ["الوقت",         `${formatTime(selected.start_time)} - ${formatTime(selected.end_time)}`],
-                ["عدد الحضور",    `${selected.attendees_count} شخص`],
-                ["مقدّم الطلب",   selected.citizen_name],
-                ["الهاتف",        selected.citizen_phone],
-                ["البريد",        selected.citizen_email ?? "—"],
+                ["التاريخ",       formatNabataeanDate(selected.bookingDate)],
+                ["الوقت",         `${formatTime(selected.startTime)} - ${formatTime(selected.endTime)}`],
+                ["عدد الحضور",    `${selected.attendeesCount} شخص`],
+                ["مقدّم الطلب",   selected.citizenName],
+                ["الهاتف",        selected.citizenPhone],
+                ["البريد",        selected.citizenEmail ?? "—"],
                 ["الحالة",        statusMap[selected.status].label],
-                ...(selected.rejection_reason ? [["سبب الرفض", selected.rejection_reason]] : []),
+                ...(selected.rejectionReason ? [["سبب الرفض", selected.rejectionReason]] : []),
                 ...(selected.notes ? [["ملاحظات", selected.notes]] : []),
               ].map(([label, value]) => (
                 <div key={label} className="flex justify-between border-b pb-1 last:border-0">

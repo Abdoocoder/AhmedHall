@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useTransition } from "react"
-import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { useMutation } from "convex/react"
 import { toast } from "sonner"
 import {
   AlertDialog,
@@ -15,7 +15,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Spinner } from "@/components/ui/spinner"
-import { deleteOrganization } from "@/app/actions/organizations"
+import { api } from "@/convex/_generated/api"
 import type { Organization } from "@/lib/types"
 
 interface DeleteOrganizationDialogProps {
@@ -25,24 +25,20 @@ interface DeleteOrganizationDialogProps {
 
 export function DeleteOrganizationDialog({ organization, trigger }: DeleteOrganizationDialogProps) {
   const [open, setOpen] = useState(false)
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
+  const [isPending, setIsPending] = useState(false)
+  const deleteOrganization = useMutation(api.organizations.remove)
 
-  function handleDelete() {
-    startTransition(async () => {
-      try {
-        const result = await deleteOrganization(organization.id)
-        if (result.error) {
-          toast.error(result.error)
-          return
-        }
-        toast.success("تم حذف الجهة بنجاح")
-        setOpen(false)
-        router.refresh()
-      } catch {
-        toast.error("حدث خطأ أثناء حذف الجهة")
-      }
-    })
+  async function handleDelete() {
+    setIsPending(true)
+    try {
+      await deleteOrganization({ id: organization._id as any })
+      toast.success("تم حذف الجهة بنجاح")
+      setOpen(false)
+    } catch {
+      toast.error("حدث خطأ أثناء حذف الجهة")
+    } finally {
+      setIsPending(false)
+    }
   }
 
   return (
@@ -52,7 +48,7 @@ export function DeleteOrganizationDialog({ organization, trigger }: DeleteOrgani
         <AlertDialogHeader>
           <AlertDialogTitle>هل أنت متأكد من الحذف؟</AlertDialogTitle>
           <AlertDialogDescription>
-            سيتم حذف جهة "{organization.name}" بشكل نهائي. سيتم أيضاً حذف جميع الحجوزات المرتبطة بها.
+            سيتم حذف جهة &ldquo;{organization.name}&rdquo; بشكل نهائي. سيتم أيضاً حذف جميع الحجوزات المرتبطة بها.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="gap-2">

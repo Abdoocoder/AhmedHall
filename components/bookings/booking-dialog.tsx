@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useTransition } from "react"
-import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { useMutation } from "convex/react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -34,27 +34,27 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Spinner } from "@/components/ui/spinner"
-import { createBooking, updateBooking } from "@/app/actions/bookings"
-import type { BookingWithRelations, Room, Organization } from "@/lib/types"
+import { api } from "@/convex/_generated/api"
+import type { Booking, Room, Organization } from "@/lib/types"
 
 const bookingSchema = z.object({
-  organization_id: z.string().min(1, "يرجى اختيار الجهة"),
-  room_id: z.string().min(1, "يرجى اختيار القاعة"),
-  booking_date: z.string().min(1, "يرجى تحديد التاريخ"),
-  start_time: z.string().min(1, "يرجى تحديد وقت البداية"),
-  end_time: z.string().min(1, "يرجى تحديد وقت النهاية"),
-  event_name: z.string().min(1, "يرجى إدخال اسم الفعالية"),
-  coordinator_name: z.string().min(1, "يرجى إدخال اسم المنسق"),
-  coordinator_phone: z.string().optional(),
-  attendees_count: z.coerce.number().min(0).optional(),
-  payment_status: z.enum(["pending", "paid", "cancelled"]),
+  orgId: z.string().min(1, "يرجى اختيار الجهة"),
+  roomId: z.string().min(1, "يرجى اختيار القاعة"),
+  bookingDate: z.string().min(1, "يرجى تحديد التاريخ"),
+  startTime: z.string().min(1, "يرجى تحديد وقت البداية"),
+  endTime: z.string().min(1, "يرجى تحديد وقت النهاية"),
+  eventName: z.string().min(1, "يرجى إدخال اسم الفعالية"),
+  coordinatorName: z.string().min(1, "يرجى إدخال اسم المنسق"),
+  coordinatorPhone: z.string().optional(),
+  attendeesCount: z.coerce.number().min(0).optional(),
+  paymentStatus: z.enum(["pending", "paid", "cancelled"]),
   notes: z.string().optional(),
 })
 
 type BookingFormValues = z.infer<typeof bookingSchema>
 
 interface BookingDialogProps {
-  booking?: BookingWithRelations
+  booking?: Booking
   rooms: Room[]
   organizations: Organization[]
   trigger?: React.ReactNode
@@ -67,51 +67,45 @@ export function BookingDialog({
   trigger,
 }: BookingDialogProps) {
   const [open, setOpen] = useState(false)
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
+  const [isPending, setIsPending] = useState(false)
+  const createBooking = useMutation(api.bookings.create)
+  const updateBooking = useMutation(api.bookings.update)
 
   const form = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
-      organization_id: booking?.organization_id ?? "",
-      room_id: booking?.room_id ?? "",
-      booking_date: booking?.booking_date ?? "",
-      start_time: booking?.start_time?.slice(0, 5) ?? "",
-      end_time: booking?.end_time?.slice(0, 5) ?? "",
-      event_name: booking?.event_name ?? "",
-      coordinator_name: booking?.coordinator_name ?? "",
-      coordinator_phone: booking?.coordinator_phone ?? "",
-      attendees_count: booking?.attendees_count ?? 0,
-      payment_status: booking?.payment_status ?? "pending",
+      orgId: booking?.orgId ?? "",
+      roomId: booking?.roomId ?? "",
+      bookingDate: booking?.bookingDate ?? "",
+      startTime: booking?.startTime?.slice(0, 5) ?? "",
+      endTime: booking?.endTime?.slice(0, 5) ?? "",
+      eventName: booking?.eventName ?? "",
+      coordinatorName: booking?.coordinatorName ?? "",
+      coordinatorPhone: booking?.coordinatorPhone ?? "",
+      attendeesCount: booking?.attendeesCount ?? 0,
+      paymentStatus: booking?.paymentStatus ?? "pending",
       notes: booking?.notes ?? "",
     },
   })
 
-  function onSubmit(data: BookingFormValues) {
-    startTransition(async () => {
-      try {
-        if (booking) {
-          const result = await updateBooking(booking.id, data)
-          if (result.error) {
-            toast.error(result.error)
-            return
-          }
-          toast.success("تم تحديث الحجز بنجاح")
-        } else {
-          const result = await createBooking(data)
-          if (result.error) {
-            toast.error(result.error)
-            return
-          }
-          toast.success("تم إنشاء الحجز بنجاح")
-        }
-        setOpen(false)
-        form.reset()
-        router.refresh()
-      } catch {
-        toast.error("حدث خطأ أثناء حفظ الحجز")
+  async function onSubmit(data: BookingFormValues) {
+    setIsPending(true)
+    try {
+      if (booking) {
+        await updateBooking({ id: booking._id as any, ...data } as any)
+        toast.success("تم تحديث الحجز بنجاح")
+      } else {
+        await createBooking({ ...data, attendeesCount: data.attendeesCount ?? 0 } as any)
+        toast.success("تم إنشاء الحجز بنجاح")
       }
-    })
+      setOpen(false)
+      form.reset()
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "حدث خطأ أثناء حفظ الحجز"
+      toast.error(message)
+    } finally {
+      setIsPending(false)
+    }
   }
 
   return (
@@ -137,7 +131,7 @@ export function BookingDialog({
             <div className="grid gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
-                name="organization_id"
+                name="orgId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>الجهة</FormLabel>
@@ -149,7 +143,7 @@ export function BookingDialog({
                       </FormControl>
                       <SelectContent>
                         {organizations.map((org) => (
-                          <SelectItem key={org.id} value={org.id}>
+                          <SelectItem key={org._id} value={org._id}>
                             {org.name}
                           </SelectItem>
                         ))}
@@ -162,7 +156,7 @@ export function BookingDialog({
 
               <FormField
                 control={form.control}
-                name="room_id"
+                name="roomId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>القاعة</FormLabel>
@@ -174,7 +168,7 @@ export function BookingDialog({
                       </FormControl>
                       <SelectContent>
                         {rooms.map((room) => (
-                          <SelectItem key={room.id} value={room.id}>
+                          <SelectItem key={room._id} value={room._id}>
                             {room.name} ({room.capacity} شخص)
                           </SelectItem>
                         ))}
@@ -188,7 +182,7 @@ export function BookingDialog({
 
             <FormField
               control={form.control}
-              name="event_name"
+              name="eventName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>اسم الفعالية</FormLabel>
@@ -203,7 +197,7 @@ export function BookingDialog({
             <div className="grid gap-4 sm:grid-cols-3">
               <FormField
                 control={form.control}
-                name="booking_date"
+                name="bookingDate"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>التاريخ</FormLabel>
@@ -217,7 +211,7 @@ export function BookingDialog({
 
               <FormField
                 control={form.control}
-                name="start_time"
+                name="startTime"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>وقت البداية</FormLabel>
@@ -231,7 +225,7 @@ export function BookingDialog({
 
               <FormField
                 control={form.control}
-                name="end_time"
+                name="endTime"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>وقت النهاية</FormLabel>
@@ -247,7 +241,7 @@ export function BookingDialog({
             <div className="grid gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
-                name="coordinator_name"
+                name="coordinatorName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>اسم المنسق</FormLabel>
@@ -261,7 +255,7 @@ export function BookingDialog({
 
               <FormField
                 control={form.control}
-                name="coordinator_phone"
+                name="coordinatorPhone"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>هاتف المنسق</FormLabel>
@@ -277,7 +271,7 @@ export function BookingDialog({
             <div className="grid gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
-                name="attendees_count"
+                name="attendeesCount"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>عدد الحضور المتوقع</FormLabel>
@@ -291,7 +285,7 @@ export function BookingDialog({
 
               <FormField
                 control={form.control}
-                name="payment_status"
+                name="paymentStatus"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>حالة الدفع</FormLabel>

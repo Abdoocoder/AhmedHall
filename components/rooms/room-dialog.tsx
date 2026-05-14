@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useTransition } from "react"
-import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { useMutation } from "convex/react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -28,14 +28,14 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Spinner } from "@/components/ui/spinner"
-import { createRoom, updateRoom } from "@/app/actions/rooms"
+import { api } from "@/convex/_generated/api"
 import type { Room } from "@/lib/types"
 
 const roomSchema = z.object({
   name: z.string().min(1, "يرجى إدخال اسم القاعة"),
   capacity: z.coerce.number().min(1, "يرجى إدخال السعة"),
   description: z.string().optional(),
-  is_active: z.boolean(),
+  isActive: z.boolean(),
 })
 
 type RoomFormValues = z.infer<typeof roomSchema>
@@ -47,8 +47,9 @@ interface RoomDialogProps {
 
 export function RoomDialog({ room, trigger }: RoomDialogProps) {
   const [open, setOpen] = useState(false)
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
+  const [isPending, setIsPending] = useState(false)
+  const createRoom = useMutation(api.rooms.create)
+  const updateRoom = useMutation(api.rooms.update)
 
   const form = useForm<RoomFormValues>({
     resolver: zodResolver(roomSchema),
@@ -56,35 +57,27 @@ export function RoomDialog({ room, trigger }: RoomDialogProps) {
       name: room?.name ?? "",
       capacity: room?.capacity ?? 50,
       description: room?.description ?? "",
-      is_active: room?.is_active ?? true,
+      isActive: room?.isActive ?? true,
     },
   })
 
-  function onSubmit(data: RoomFormValues) {
-    startTransition(async () => {
-      try {
-        if (room) {
-          const result = await updateRoom(room.id, data)
-          if (result.error) {
-            toast.error(result.error)
-            return
-          }
-          toast.success("تم تحديث القاعة بنجاح")
-        } else {
-          const result = await createRoom(data)
-          if (result.error) {
-            toast.error(result.error)
-            return
-          }
-          toast.success("تم إنشاء القاعة بنجاح")
-        }
-        setOpen(false)
-        form.reset()
-        router.refresh()
-      } catch {
-        toast.error("حدث خطأ أثناء حفظ القاعة")
+  async function onSubmit(data: RoomFormValues) {
+    setIsPending(true)
+    try {
+      if (room) {
+        await updateRoom({ id: room._id as any, ...data } as any)
+        toast.success("تم تحديث القاعة بنجاح")
+      } else {
+        await createRoom(data)
+        toast.success("تم إنشاء القاعة بنجاح")
       }
-    })
+      setOpen(false)
+      form.reset()
+    } catch {
+      toast.error("حدث خطأ أثناء حفظ القاعة")
+    } finally {
+      setIsPending(false)
+    }
   }
 
   return (
@@ -155,7 +148,7 @@ export function RoomDialog({ room, trigger }: RoomDialogProps) {
 
             <FormField
               control={form.control}
-              name="is_active"
+              name="isActive"
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">

@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useTransition } from "react"
-import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { useMutation } from "convex/react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -26,12 +26,12 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
-import { createOrganization, updateOrganization } from "@/app/actions/organizations"
+import { api } from "@/convex/_generated/api"
 import type { Organization } from "@/lib/types"
 
 const organizationSchema = z.object({
   name: z.string().min(1, "يرجى إدخال اسم الجهة"),
-  contact_person: z.string().optional(),
+  contactPerson: z.string().optional(),
   phone: z.string().optional(),
   email: z.string().email("بريد إلكتروني غير صحيح").optional().or(z.literal("")),
 })
@@ -45,44 +45,37 @@ interface OrganizationDialogProps {
 
 export function OrganizationDialog({ organization, trigger }: OrganizationDialogProps) {
   const [open, setOpen] = useState(false)
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
+  const [isPending, setIsPending] = useState(false)
+  const createOrganization = useMutation(api.organizations.create)
+  const updateOrganization = useMutation(api.organizations.update)
 
   const form = useForm<OrganizationFormValues>({
     resolver: zodResolver(organizationSchema),
     defaultValues: {
       name: organization?.name ?? "",
-      contact_person: organization?.contact_person ?? "",
+      contactPerson: organization?.contactPerson ?? "",
       phone: organization?.phone ?? "",
       email: organization?.email ?? "",
     },
   })
 
-  function onSubmit(data: OrganizationFormValues) {
-    startTransition(async () => {
-      try {
-        if (organization) {
-          const result = await updateOrganization(organization.id, data)
-          if (result.error) {
-            toast.error(result.error)
-            return
-          }
-          toast.success("تم تحديث الجهة بنجاح")
-        } else {
-          const result = await createOrganization(data)
-          if (result.error) {
-            toast.error(result.error)
-            return
-          }
-          toast.success("تم إنشاء الجهة بنجاح")
-        }
-        setOpen(false)
-        form.reset()
-        router.refresh()
-      } catch {
-        toast.error("حدث خطأ أثناء حفظ الجهة")
+  async function onSubmit(data: OrganizationFormValues) {
+    setIsPending(true)
+    try {
+      if (organization) {
+        await updateOrganization({ id: organization._id as any, ...data } as any)
+        toast.success("تم تحديث الجهة بنجاح")
+      } else {
+        await createOrganization(data)
+        toast.success("تم إنشاء الجهة بنجاح")
       }
-    })
+      setOpen(false)
+      form.reset()
+    } catch {
+      toast.error("حدث خطأ أثناء حفظ الجهة")
+    } finally {
+      setIsPending(false)
+    }
   }
 
   return (
@@ -121,7 +114,7 @@ export function OrganizationDialog({ organization, trigger }: OrganizationDialog
 
             <FormField
               control={form.control}
-              name="contact_person"
+              name="contactPerson"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>الشخص المسؤول</FormLabel>

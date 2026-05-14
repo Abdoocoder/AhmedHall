@@ -39,11 +39,11 @@ import {
 import { MoreHorizontal, Search, ChevronLeft, ChevronRight } from "lucide-react"
 import { BookingDialog } from "./booking-dialog"
 import { DeleteBookingDialog } from "./delete-booking-dialog"
-import type { BookingWithRelations, Room, Organization } from "@/lib/types"
+import type { Booking, Room, Organization } from "@/lib/types"
 import { formatNabataeanDate } from "@/lib/nabataean-calendar"
 
 interface BookingsTableProps {
-  bookings: BookingWithRelations[]
+  bookings: Booking[]
   rooms: Room[]
   organizations: Organization[]
   totalCount: number
@@ -91,16 +91,16 @@ export function BookingsTable({
     router.push(`?${params.toString()}`)
   }
 
-  const columns = useMemo<ColumnDef<BookingWithRelations>[]>(
+  const columns = useMemo<ColumnDef<Booking>[]>(
     () => [
       {
-        accessorKey: "event_name",
+        accessorKey: "eventName",
         header: "الفعالية",
         cell: ({ row }) => (
           <div>
-            <p className="font-medium">{row.original.event_name}</p>
+            <p className="font-medium">{row.original.eventName}</p>
             <p className="text-sm text-muted-foreground">
-              {row.original.coordinator_name}
+              {row.original.coordinatorName}
             </p>
           </div>
         ),
@@ -118,34 +118,34 @@ export function BookingsTable({
         cell: ({ row }) => row.original.room?.name ?? "-",
         filterFn: (row, _, filterValue) => {
           if (!filterValue || filterValue === "all") return true
-          return row.original.room_id === filterValue
+          return row.original.roomId === filterValue
         },
       },
       {
-        accessorKey: "booking_date",
+        accessorKey: "bookingDate",
         header: "التاريخ",
-        cell: ({ row }) => formatDate(row.original.booking_date),
+        cell: ({ row }) => formatDate(row.original.bookingDate),
       },
       {
-        accessorKey: "start_time",
+        accessorKey: "startTime",
         header: "الوقت",
         cell: ({ row }) => (
           <span>
-            {formatTime(row.original.start_time)} - {formatTime(row.original.end_time)}
+            {formatTime(row.original.startTime)} - {formatTime(row.original.endTime)}
           </span>
         ),
       },
       {
-        accessorKey: "payment_status",
+        accessorKey: "paymentStatus",
         header: "الدفع",
         cell: ({ row }) => (
-          <Badge variant={paymentStatusMap[row.original.payment_status].variant}>
-            {paymentStatusMap[row.original.payment_status].label}
+          <Badge variant={paymentStatusMap[row.original.paymentStatus].variant}>
+            {paymentStatusMap[row.original.paymentStatus].label}
           </Badge>
         ),
         filterFn: (row, _, filterValue) => {
           if (!filterValue || filterValue === "all") return true
-          return row.original.payment_status === filterValue
+          return row.original.paymentStatus === filterValue
         },
       },
       {
@@ -229,16 +229,16 @@ export function BookingsTable({
           <SelectContent>
             <SelectItem value="all">جميع القاعات</SelectItem>
             {rooms.map((room) => (
-              <SelectItem key={room.id} value={room.id}>
+              <SelectItem key={room._id} value={room._id}>
                 {room.name}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
         <Select
-          value={(table.getColumn("payment_status")?.getFilterValue() as string) ?? "all"}
+          value={(table.getColumn("paymentStatus")?.getFilterValue() as string) ?? "all"}
           onValueChange={(value) =>
-            table.getColumn("payment_status")?.setFilterValue(value === "all" ? "" : value)
+            table.getColumn("paymentStatus")?.setFilterValue(value === "all" ? "" : value)
           }
         >
           <SelectTrigger className="w-[180px]">

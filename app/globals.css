@@ -77,6 +77,8 @@
 @theme inline {
   --font-sans: 'Geist', 'Geist Fallback';
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-in-out-expo: cubic-bezier(0.77, 0, 0.175, 1);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -123,4 +125,46 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@custom-media --motion-safe (prefers-reduced-motion: no-preference);
+
+@layer base {
+  @media (--motion-safe) {
+    .animate-in {
+      animation: fadeIn 200ms var(--ease-out-expo) forwards;
+    }
+
+    .animate-in-up {
+      animation: fadeInUp 300ms var(--ease-out-expo) forwards;
+    }
+
+    .stagger-1 { animation-delay: 0ms; }
+    .stagger-2 { animation-delay: 60ms; }
+    .stagger-3 { animation-delay: 120ms; }
+    .stagger-4 { animation-delay: 180ms; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-in,
+    .animate-in-up,
+    .stagger-1,
+    .stagger-2,
+    .stagger-3,
+    .stagger-4 {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }

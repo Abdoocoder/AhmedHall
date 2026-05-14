@@ -1,17 +1,12 @@
-import { createClient } from "@/lib/supabase/server"
+"use client"
+
+import { useQuery } from "convex/react"
 import { BookingCalendar } from "@/components/calendar/booking-calendar"
+import { api } from "@/convex/_generated/api"
 
-export default async function CalendarPage() {
-  const supabase = await createClient()
-
-  const [{ data: bookings }, { data: rooms }] = await Promise.all([
-    supabase.from("bookings").select(`
-      *,
-      organization:organizations(*),
-      room:rooms(*)
-    `).is("deleted_at", null),
-    supabase.from("rooms").select("*").eq("is_active", true).order("name"),
-  ])
+export default function CalendarPage() {
+  const bookings = useQuery(api.bookings.list) ?? []
+  const rooms = useQuery(api.rooms.listActive) ?? []
 
   return (
     <div className="space-y-6">
@@ -22,7 +17,7 @@ export default async function CalendarPage() {
         </p>
       </div>
 
-      <BookingCalendar bookings={bookings ?? []} rooms={rooms ?? []} />
+      <BookingCalendar bookings={bookings} rooms={rooms} />
     </div>
   )
 }

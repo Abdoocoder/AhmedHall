@@ -8,11 +8,11 @@ import {
   EmptyMedia,
 } from "@/components/ui/empty"
 import { CalendarDays } from "lucide-react"
-import type { BookingWithRelations } from "@/lib/types"
+import type { Booking } from "@/lib/types"
 import { formatNabataeanDate } from "@/lib/nabataean-calendar"
 
 interface UpcomingBookingsProps {
-  bookings: BookingWithRelations[]
+  bookings: Booking[]
 }
 
 const paymentStatusMap = {
@@ -55,20 +55,20 @@ export function UpcomingBookings({ bookings }: UpcomingBookingsProps) {
           <div className="space-y-4">
             {bookings.map((booking) => (
               <div
-                key={booking.id}
-                className="flex items-center justify-between rounded-lg border p-4"
+                key={booking._id}
+                className="flex items-center justify-between rounded-lg border p-4 transition-[transform,box-shadow] duration-200 ease-out-expo motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-sm"
               >
                 <div className="space-y-1">
-                  <p className="font-medium">{booking.event_name}</p>
+                  <p className="font-medium">{booking.eventName}</p>
                   <p className="text-sm text-muted-foreground">
                     {booking.organization?.name} - {booking.room?.name}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {formatDate(booking.booking_date)} | {formatTime(booking.start_time)} - {formatTime(booking.end_time)}
+                    {formatDate(booking.bookingDate)} | {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
                   </p>
                 </div>
-                <Badge variant={paymentStatusMap[booking.payment_status].variant}>
-                  {paymentStatusMap[booking.payment_status].label}
+                <Badge variant={paymentStatusMap[booking.paymentStatus].variant}>
+                  {paymentStatusMap[booking.paymentStatus].label}
                 </Badge>
               </div>
             ))}

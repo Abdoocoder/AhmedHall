@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useTransition } from "react"
-import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { useMutation } from "convex/react"
 import { toast } from "sonner"
 import {
   AlertDialog,
@@ -15,7 +15,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Spinner } from "@/components/ui/spinner"
-import { deleteBooking } from "@/app/actions/bookings"
+import { api } from "@/convex/_generated/api"
 import type { Booking } from "@/lib/types"
 
 interface DeleteBookingDialogProps {
@@ -25,24 +25,20 @@ interface DeleteBookingDialogProps {
 
 export function DeleteBookingDialog({ booking, trigger }: DeleteBookingDialogProps) {
   const [open, setOpen] = useState(false)
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
+  const [isPending, setIsPending] = useState(false)
+  const deleteBooking = useMutation(api.bookings.remove)
 
-  function handleDelete() {
-    startTransition(async () => {
-      try {
-        const result = await deleteBooking(booking.id)
-        if (result.error) {
-          toast.error(result.error)
-          return
-        }
-        toast.success("تم حذف الحجز بنجاح")
-        setOpen(false)
-        router.refresh()
-      } catch {
-        toast.error("حدث خطأ أثناء حذف الحجز")
-      }
-    })
+  async function handleDelete() {
+    setIsPending(true)
+    try {
+      await deleteBooking({ id: booking._id as any })
+      toast.success("تم حذف الحجز بنجاح")
+      setOpen(false)
+    } catch {
+      toast.error("حدث خطأ أثناء حذف الحجز")
+    } finally {
+      setIsPending(false)
+    }
   }
 
   return (
@@ -52,7 +48,7 @@ export function DeleteBookingDialog({ booking, trigger }: DeleteBookingDialogPro
         <AlertDialogHeader>
           <AlertDialogTitle>هل أنت متأكد من الحذف؟</AlertDialogTitle>
           <AlertDialogDescription>
-            سيتم حذف حجز "{booking.event_name}" بشكل نهائي. لا يمكن التراجع عن هذا الإجراء.
+            سيتم حذف حجز &ldquo;{booking.eventName}&rdquo; بشكل نهائي. لا يمكن التراجع عن هذا الإجراء.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="gap-2">

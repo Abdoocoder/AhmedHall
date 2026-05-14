@@ -43,7 +43,7 @@ export function RoomsGrid({ rooms }: RoomsGridProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {rooms.map((room) => (
-        <Card key={room.id}>
+        <Card key={room._id} className="transition-[transform,box-shadow] duration-200 ease-out-expo motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md">
           <CardHeader className="flex flex-row items-start justify-between space-y-0">
             <div className="space-y-1">
               <CardTitle className="text-lg">{room.name}</CardTitle>
@@ -53,8 +53,8 @@ export function RoomsGrid({ rooms }: RoomsGridProps) {
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant={room.is_active ? "default" : "secondary"}>
-                {room.is_active ? "نشط" : "غير نشط"}
+              <Badge variant={room.isActive ? "default" : "secondary"}>
+                {room.isActive ? "نشط" : "غير نشط"}
               </Badge>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useTransition } from "react"
-import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { useMutation } from "convex/react"
 import { toast } from "sonner"
 import {
   AlertDialog,
@@ -15,7 +15,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Spinner } from "@/components/ui/spinner"
-import { deleteRoom } from "@/app/actions/rooms"
+import { api } from "@/convex/_generated/api"
 import type { Room } from "@/lib/types"
 
 interface DeleteRoomDialogProps {
@@ -25,24 +25,20 @@ interface DeleteRoomDialogProps {
 
 export function DeleteRoomDialog({ room, trigger }: DeleteRoomDialogProps) {
   const [open, setOpen] = useState(false)
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
+  const [isPending, setIsPending] = useState(false)
+  const deleteRoom = useMutation(api.rooms.remove)
 
-  function handleDelete() {
-    startTransition(async () => {
-      try {
-        const result = await deleteRoom(room.id)
-        if (result.error) {
-          toast.error(result.error)
-          return
-        }
-        toast.success("تم حذف القاعة بنجاح")
-        setOpen(false)
-        router.refresh()
-      } catch {
-        toast.error("حدث خطأ أثناء حذف القاعة")
-      }
-    })
+  async function handleDelete() {
+    setIsPending(true)
+    try {
+      await deleteRoom({ id: room._id as any })
+      toast.success("تم حذف القاعة بنجاح")
+      setOpen(false)
+    } catch {
+      toast.error("حدث خطأ أثناء حذف القاعة")
+    } finally {
+      setIsPending(false)
+    }
   }
 
   return (
@@ -52,7 +48,7 @@ export function DeleteRoomDialog({ room, trigger }: DeleteRoomDialogProps) {
         <AlertDialogHeader>
           <AlertDialogTitle>هل أنت متأكد من الحذف؟</AlertDialogTitle>
           <AlertDialogDescription>
-            سيتم حذف قاعة "{room.name}" بشكل نهائي. سيتم أيضاً حذف جميع الحجوزات المرتبطة بها.
+            سيتم حذف قاعة &ldquo;{room.name}&rdquo; بشكل نهائي. سيتم أيضاً حذف جميع الحجوزات المرتبطة بها.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="gap-2">

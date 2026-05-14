@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { Cairo } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { Toaster } from '@/components/ui/sonner'
+import { ThemeProvider } from '@/components/theme-provider'
+import { ConvexClientProvider } from '@/components/ConvexClientProvider'
 import './globals.css'
 
 const notoSansArabic = Cairo({
@@ -30,11 +32,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="ar" dir="rtl">
+    <html lang="ar" dir="rtl" suppressHydrationWarning>
       <body className={`${notoSansArabic.className} antialiased`}>
-        {children}
-        <Toaster position="top-center" />
-        {process.env.NODE_ENV === 'production' && <Analytics />}
+        <ConvexClientProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            {children}
+            <Toaster position="top-center" />
+            {process.env.NODE_ENV === 'production' && <Analytics />}
+          </ThemeProvider>
+        </ConvexClientProvider>
       </body>
     </html>
   )
