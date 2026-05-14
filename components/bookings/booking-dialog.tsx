@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/select"
 import { Spinner } from "@/components/ui/spinner"
 import { api } from "@/convex/_generated/api"
+import type { Id } from "@/convex/_generated/dataModel"
 import type { Booking, Room, Organization } from "@/lib/types"
 
 const bookingSchema = z.object({
@@ -92,10 +93,35 @@ export function BookingDialog({
     setIsPending(true)
     try {
       if (booking) {
-        await updateBooking({ id: booking._id as any, ...data } as any)
+        await updateBooking({
+          id: booking._id as Id<"bookings">,
+          orgId: data.orgId as Id<"organizations">,
+          roomId: data.roomId as Id<"rooms">,
+          bookingDate: data.bookingDate,
+          startTime: data.startTime,
+          endTime: data.endTime,
+          eventName: data.eventName,
+          coordinatorName: data.coordinatorName,
+          coordinatorPhone: data.coordinatorPhone,
+          attendeesCount: data.attendeesCount ?? 0,
+          paymentStatus: data.paymentStatus,
+          notes: data.notes,
+        })
         toast.success("تم تحديث الحجز بنجاح")
       } else {
-        await createBooking({ ...data, attendeesCount: data.attendeesCount ?? 0 } as any)
+        await createBooking({
+          orgId: data.orgId as Id<"organizations">,
+          roomId: data.roomId as Id<"rooms">,
+          bookingDate: data.bookingDate,
+          startTime: data.startTime,
+          endTime: data.endTime,
+          eventName: data.eventName,
+          coordinatorName: data.coordinatorName,
+          coordinatorPhone: data.coordinatorPhone,
+          attendeesCount: data.attendeesCount ?? 0,
+          paymentStatus: data.paymentStatus,
+          notes: data.notes,
+        })
         toast.success("تم إنشاء الحجز بنجاح")
       }
       setOpen(false)

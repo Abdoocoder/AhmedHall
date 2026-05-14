@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Spinner } from "@/components/ui/spinner"
 import { api } from "@/convex/_generated/api"
+import type { Id } from "@/convex/_generated/dataModel"
 import type { Room } from "@/lib/types"
 
 interface DeleteRoomDialogProps {
@@ -31,7 +32,7 @@ export function DeleteRoomDialog({ room, trigger }: DeleteRoomDialogProps) {
   async function handleDelete() {
     setIsPending(true)
     try {
-      await deleteRoom({ id: room._id as any })
+      await deleteRoom({ id: room._id as Id<"rooms"> })
       toast.success("تم حذف القاعة بنجاح")
       setOpen(false)
     } catch {

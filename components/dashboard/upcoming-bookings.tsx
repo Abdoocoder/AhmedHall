@@ -10,28 +10,13 @@ import {
 import { CalendarDays } from "lucide-react"
 import type { Booking } from "@/lib/types"
 import { formatNabataeanDate } from "@/lib/nabataean-calendar"
+import { paymentStatusMap, formatTime } from "@/lib/booking-utils"
 
 interface UpcomingBookingsProps {
   bookings: Booking[]
 }
 
-const paymentStatusMap = {
-  pending: { label: "قيد الانتظار", variant: "secondary" as const },
-  paid: { label: "مدفوع", variant: "default" as const },
-  cancelled: { label: "ملغي", variant: "destructive" as const },
-}
 
-function formatDate(dateString: string) {
-  return formatNabataeanDate(dateString)
-}
-
-function formatTime(timeString: string) {
-  const [hours, minutes] = timeString.split(":")
-  const hour = parseInt(hours)
-  const ampm = hour >= 12 ? "م" : "ص"
-  const hour12 = hour % 12 || 12
-  return `${hour12}:${minutes} ${ampm}`
-}
 
 export function UpcomingBookings({ bookings }: UpcomingBookingsProps) {
   return (
@@ -64,7 +49,7 @@ export function UpcomingBookings({ bookings }: UpcomingBookingsProps) {
                     {booking.organization?.name} - {booking.room?.name}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {formatDate(booking.bookingDate)} | {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
+                    {formatNabataeanDate(booking.bookingDate)} | {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
                   </p>
                 </div>
                 <Badge variant={paymentStatusMap[booking.paymentStatus].variant}>

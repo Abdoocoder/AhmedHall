@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select"
 import type { Booking, Room } from "@/lib/types"
 import { formatNabataeanDate, formatNabataeanMonthYear } from "@/lib/nabataean-calendar"
+import { paymentStatusMap, formatTime } from "@/lib/booking-utils"
 
 interface BookingCalendarProps {
   bookings: Booking[]
@@ -36,20 +37,6 @@ const colorPalette = [
   "var(--chart-5)",
   "var(--primary)",
 ]
-
-const paymentStatusMap = {
-  pending: { label: "قيد الانتظار", variant: "secondary" as const },
-  paid: { label: "مدفوع", variant: "default" as const },
-  cancelled: { label: "ملغي", variant: "destructive" as const },
-}
-
-function formatTime(timeString: string) {
-  const [hours, minutes] = timeString.split(":")
-  const hour = parseInt(hours)
-  const ampm = hour >= 12 ? "م" : "ص"
-  const hour12 = hour % 12 || 12
-  return `${hour12}:${minutes} ${ampm}`
-}
 
 export function BookingCalendar({ bookings, rooms }: BookingCalendarProps) {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)

@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Spinner } from "@/components/ui/spinner"
 import { api } from "@/convex/_generated/api"
+import type { Id } from "@/convex/_generated/dataModel"
 import type { Booking } from "@/lib/types"
 
 interface DeleteBookingDialogProps {
@@ -31,7 +32,7 @@ export function DeleteBookingDialog({ booking, trigger }: DeleteBookingDialogPro
   async function handleDelete() {
     setIsPending(true)
     try {
-      await deleteBooking({ id: booking._id as any })
+      await deleteBooking({ id: booking._id as Id<"bookings"> })
       toast.success("تم حذف الحجز بنجاح")
       setOpen(false)
     } catch {

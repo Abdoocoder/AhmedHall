@@ -48,6 +48,7 @@ import { BookingDialog } from "./booking-dialog"
 import { DeleteBookingDialog } from "./delete-booking-dialog"
 import type { Booking, Room, Organization } from "@/lib/types"
 import { formatNabataeanDate } from "@/lib/nabataean-calendar"
+import { paymentStatusMap, formatTime } from "@/lib/booking-utils"
 
 interface BookingsTableProps {
   bookings: Booking[]
@@ -58,23 +59,7 @@ interface BookingsTableProps {
   pageSize: number
 }
 
-const paymentStatusMap = {
-  pending: { label: "قيد الانتظار", variant: "secondary" as const },
-  paid: { label: "مدفوع", variant: "default" as const },
-  cancelled: { label: "ملغي", variant: "destructive" as const },
-}
 
-function formatDate(dateString: string) {
-  return formatNabataeanDate(dateString)
-}
-
-function formatTime(timeString: string) {
-  const [hours, minutes] = timeString.split(":")
-  const hour = parseInt(hours)
-  const ampm = hour >= 12 ? "م" : "ص"
-  const hour12 = hour % 12 || 12
-  return `${hour12}:${minutes} ${ampm}`
-}
 
 export function BookingsTable({
   bookings,
@@ -131,7 +116,7 @@ export function BookingsTable({
       {
         accessorKey: "bookingDate",
         header: "التاريخ",
-        cell: ({ row }) => formatDate(row.original.bookingDate),
+        cell: ({ row }) => formatNabataeanDate(row.original.bookingDate),
       },
       {
         accessorKey: "startTime",

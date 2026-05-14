@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Spinner } from "@/components/ui/spinner"
 import { api } from "@/convex/_generated/api"
+import type { Id } from "@/convex/_generated/dataModel"
 import type { Organization } from "@/lib/types"
 
 interface DeleteOrganizationDialogProps {
@@ -31,7 +32,7 @@ export function DeleteOrganizationDialog({ organization, trigger }: DeleteOrgani
   async function handleDelete() {
     setIsPending(true)
     try {
-      await deleteOrganization({ id: organization._id as any })
+      await deleteOrganization({ id: organization._id as Id<"organizations"> })
       toast.success("تم حذف الجهة بنجاح")
       setOpen(false)
     } catch {

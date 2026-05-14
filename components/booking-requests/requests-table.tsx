@@ -19,19 +19,15 @@ import { Textarea } from "@/components/ui/textarea"
 import { Spinner } from "@/components/ui/spinner"
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty"
 import { api } from "@/convex/_generated/api"
+import type { Id } from "@/convex/_generated/dataModel"
 import { formatNabataeanDate } from "@/lib/nabataean-calendar"
+import { formatTime } from "@/lib/booking-utils"
 import type { BookingRequest } from "@/lib/types"
 
 const statusMap = {
   pending:  { label: "قيد المراجعة", variant: "secondary" as const, icon: Clock },
   approved: { label: "مقبول",         variant: "default"   as const, icon: CheckCircle },
   rejected: { label: "مرفوض",         variant: "destructive" as const, icon: XCircle },
-}
-
-function formatTime(t: string) {
-  const [h, m] = t.split(":")
-  const hour = parseInt(h)
-  return `${hour % 12 || 12}:${m} ${hour >= 12 ? "م" : "ص"}`
 }
 
 export function RequestsTable({ requests }: { requests: BookingRequest[] }) {
@@ -45,7 +41,7 @@ export function RequestsTable({ requests }: { requests: BookingRequest[] }) {
   async function handleApprove(req: BookingRequest) {
     setIsPending(true)
     try {
-      await approveRequest({ id: req._id as any })
+      await approveRequest({ id: req._id as Id<"bookingRequests"> })
       toast.success("تم قبول الطلب وإنشاء الحجز")
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "حدث خطأ أثناء قبول الطلب"
@@ -59,7 +55,7 @@ export function RequestsTable({ requests }: { requests: BookingRequest[] }) {
     if (!rejectDialog) return
     setIsPending(true)
     try {
-      await rejectRequest({ id: rejectDialog._id as any, reason: rejectReason || undefined })
+      await rejectRequest({ id: rejectDialog._id as Id<"bookingRequests">, reason: rejectReason || undefined })
       toast.success("تم رفض الطلب")
       setRejectDialog(null)
       setRejectReason("")

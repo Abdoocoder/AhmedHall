@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/select"
 import { Spinner } from "@/components/ui/spinner"
 import { api } from "@/convex/_generated/api"
+import type { Id } from "@/convex/_generated/dataModel"
 
 const schema = z.object({
   organizationName: z.string().min(2, "يرجى إدخال اسم الجهة"),
@@ -74,10 +75,18 @@ export function BookingRequestForm({ rooms }: { rooms: { _id: string; name: stri
     setIsPending(true)
     try {
       await submitRequest({
-        ...values,
-        citizenEmail: values.citizenEmail || undefined,
+        eventName: values.eventName,
+        bookingDate: values.bookingDate,
+        startTime: values.startTime,
+        endTime: values.endTime,
+        attendeesCount: values.attendeesCount,
         notes: values.notes || undefined,
-      } as any)
+        roomId: values.roomId as Id<"rooms">,
+        citizenName: values.citizenName,
+        citizenPhone: values.citizenPhone,
+        citizenEmail: values.citizenEmail || undefined,
+        organizationName: values.organizationName,
+      })
       setSubmitted(true)
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "حدث خطأ أثناء إرسال الطلب"

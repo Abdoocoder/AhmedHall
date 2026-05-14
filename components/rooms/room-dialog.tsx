@@ -29,6 +29,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Spinner } from "@/components/ui/spinner"
 import { api } from "@/convex/_generated/api"
+import type { Id } from "@/convex/_generated/dataModel"
 import type { Room } from "@/lib/types"
 
 const roomSchema = z.object({
@@ -65,7 +66,13 @@ export function RoomDialog({ room, trigger }: RoomDialogProps) {
     setIsPending(true)
     try {
       if (room) {
-        await updateRoom({ id: room._id as any, ...data } as any)
+        await updateRoom({
+          id: room._id as Id<"rooms">,
+          name: data.name,
+          capacity: data.capacity,
+          description: data.description,
+          isActive: data.isActive,
+        })
         toast.success("تم تحديث القاعة بنجاح")
       } else {
         await createRoom(data)

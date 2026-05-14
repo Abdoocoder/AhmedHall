@@ -27,6 +27,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import { api } from "@/convex/_generated/api"
+import type { Id } from "@/convex/_generated/dataModel"
 import type { Organization } from "@/lib/types"
 
 const organizationSchema = z.object({
@@ -63,7 +64,13 @@ export function OrganizationDialog({ organization, trigger }: OrganizationDialog
     setIsPending(true)
     try {
       if (organization) {
-        await updateOrganization({ id: organization._id as any, ...data } as any)
+        await updateOrganization({
+          id: organization._id as Id<"organizations">,
+          name: data.name,
+          contactPerson: data.contactPerson,
+          phone: data.phone,
+          email: data.email || undefined,
+        })
         toast.success("تم تحديث الجهة بنجاح")
       } else {
         await createOrganization(data)
