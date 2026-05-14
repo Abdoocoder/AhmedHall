@@ -36,7 +36,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { MoreHorizontal, Search, ChevronLeft, ChevronRight } from "lucide-react"
+import {
+  Empty,
+  EmptyHeader,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyMedia,
+} from "@/components/ui/empty"
+import { MoreHorizontal, Search, ChevronLeft, ChevronRight, ClipboardList } from "lucide-react"
 import { BookingDialog } from "./booking-dialog"
 import { DeleteBookingDialog } from "./delete-booking-dialog"
 import type { Booking, Room, Organization } from "@/lib/types"
@@ -287,11 +294,16 @@ export function BookingsTable({
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  لا توجد حجوزات
+                <TableCell colSpan={columns.length} className="h-40 p-0">
+                  <Empty>
+                    <EmptyHeader>
+                      <EmptyMedia variant="icon">
+                        <ClipboardList />
+                      </EmptyMedia>
+                      <EmptyTitle>لا توجد حجوزات</EmptyTitle>
+                      <EmptyDescription>لم يتم العثور على أي حجوزات. أضف حجزاً جديداً للبدء.</EmptyDescription>
+                    </EmptyHeader>
+                  </Empty>
                 </TableCell>
               </TableRow>
             )}

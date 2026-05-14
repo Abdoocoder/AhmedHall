@@ -88,7 +88,7 @@ export function RoomsGrid({ rooms }: RoomsGridProps) {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              {room.description || "لا يوجد وصف"}
+              {room.description || <span className="text-muted-foreground/60 italic">لا يوجد وصف</span>}
             </p>
           </CardContent>
         </Card>

@@ -100,8 +100,8 @@ export default function LoginPage() {
 
   if (verifying) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-primary/5 via-background to-primary/10 p-4">
-        <Card className="w-full max-w-md shadow-xl border-0">
+      <div className="min-h-screen flex items-center justify-center bg-[#F5F7FA] p-4">
+        <Card className="w-full max-w-md shadow-[0_1px_3px_0_rgba(0,0,0,0.04)]">
           <CardHeader className="space-y-6 text-center pb-2">
             <div className="mx-auto relative w-24 h-24">
               <Image
@@ -151,8 +151,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-primary/5 via-background to-primary/10 p-4">
-      <Card className="w-full max-w-md shadow-xl border-0">
+      <div className="min-h-screen flex items-center justify-center bg-[#F5F7FA] p-4">
+        <Card className="w-full max-w-md shadow-[0_1px_3px_0_rgba(0,0,0,0.04)]">
         <CardHeader className="space-y-6 text-center pb-2">
           <div className="mx-auto relative w-24 h-24">
             <Image

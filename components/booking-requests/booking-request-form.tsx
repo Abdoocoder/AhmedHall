@@ -113,7 +113,7 @@ export function BookingRequestForm({ rooms }: { rooms: { _id: string; name: stri
 
             {/* Citizen Info */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-sm text-muted-foreground uppercase">بيانات مقدّم الطلب</h3>
+              <h3 className="font-semibold text-sm text-muted-foreground">بيانات مقدّم الطلب</h3>
               <div className="grid gap-4 sm:grid-cols-2">
                 <FormField control={form.control} name="citizenName" render={({ field }) => (
                   <FormItem>
@@ -150,7 +150,7 @@ export function BookingRequestForm({ rooms }: { rooms: { _id: string; name: stri
 
             {/* Event Info */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-sm text-muted-foreground uppercase">بيانات الفعالية</h3>
+              <h3 className="font-semibold text-sm text-muted-foreground">بيانات الفعالية</h3>
               <FormField control={form.control} name="eventName" render={({ field }) => (
                 <FormItem>
                   <FormLabel>اسم الفعالية *</FormLabel>
@@ -217,7 +217,7 @@ export function BookingRequestForm({ rooms }: { rooms: { _id: string; name: stri
               )} />
             </div>
 
-            <Button type="submit" className="w-full" disabled={isPending}>
+            <Button type="submit" className="w-full rounded-full" disabled={isPending}>
               {isPending && <Spinner className="ml-2" />}
               إرسال الطلب
             </Button>

@@ -100,7 +100,7 @@ export function RequestsTable({ requests }: { requests: BookingRequest[] }) {
                     <div className="flex items-center gap-2">
                       <span className="font-semibold">{req.eventName}</span>
                       <Badge variant={status.variant} className="gap-1">
-                        <StatusIcon className="h-3 w-3" />
+                        <StatusIcon className="size-3" />
                         {status.label}
                       </Badge>
                     </div>
@@ -116,17 +116,17 @@ export function RequestsTable({ requests }: { requests: BookingRequest[] }) {
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <Button variant="outline" size="sm" onClick={() => setSelected(req)}>
-                      <Eye className="h-4 w-4 ml-1" />
+                      <Eye className="size-4 ml-1" />
                       التفاصيل
                     </Button>
                     {req.status === "pending" && (
                       <>
                         <Button size="sm" onClick={() => handleApprove(req)} disabled={isPending}>
-                          {isPending ? <Spinner className="h-4 w-4" /> : <CheckCircle className="h-4 w-4 ml-1" />}
+                          {isPending ? <Spinner className="size-4" /> : <CheckCircle className="size-4 ml-1" />}
                           قبول
                         </Button>
                         <Button variant="destructive" size="sm" onClick={() => setRejectDialog(req)} disabled={isPending}>
-                          <XCircle className="h-4 w-4 ml-1" />
+                          <XCircle className="size-4 ml-1" />
                           رفض
                         </Button>
                       </>
